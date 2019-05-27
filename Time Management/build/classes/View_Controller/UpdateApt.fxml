@@ -4,14 +4,17 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
+<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
      <children>
-      <Label layoutX="16.0" layoutY="14.0" prefHeight="27.0" prefWidth="171.0" text="Update Appointment">
+      <Label layoutX="16.0" layoutY="14.0" prefHeight="27.0" prefWidth="193.0" text="Update Appointment">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -86,5 +89,15 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="50.0" layoutX="-5.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="366.0">
+         <fill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop color="#1879d3" />
+                  <Stop color="WHITE" offset="1.0" />
+               </stops>
+            </LinearGradient>
+         </fill>
+      </Rectangle>
    </children>
 </AnchorPane>
