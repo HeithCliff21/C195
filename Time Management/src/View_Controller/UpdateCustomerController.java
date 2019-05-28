@@ -128,7 +128,7 @@ public class UpdateCustomerController implements Initializable {
             UpdateCustomerCity.getSelectionModel().select(city);
             CountrySet();
         } catch (Exception ex) {
-            Logger.getLogger(DeleteCustomerController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UpdateCustomerController.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }    

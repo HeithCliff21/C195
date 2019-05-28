@@ -7,17 +7,28 @@ package View_Controller;
 
 import Model.Appointment;
 import Model.City;
+import Model.Customer;
+import static View_Controller.MainController.appointmentToCustomerId;
+import static View_Controller.MainController.appointmentToType;
+import static View_Controller.MainController.appointmentToLocation;
 import static View_Controller.MainController.appointmentToStart;
-import static View_Controller.MainController.customerToCustName;
-import static View_Controller.MainController.customerToCustomerId;
+import static View_Controller.MainController.appointmentToEnd;
+import static View_Controller.MainController.appointmentToContact;
+import static View_Controller.MainController.appointmentToUrl;
+import static View_Controller.MainController.appointmentToTitle;
+import static View_Controller.MainController.appointmentToDiscription;
 import java.io.IOException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -183,10 +194,14 @@ public class UpdateAptController implements Initializable {
     }
     
     @FXML
-     public void SetDate() {
+     public void SetDate() throws ParseException {
         DatePicker newaptDate = new DatePicker();
         
-        newaptDate.setValue(LocalDate.now());
+        String dateL = Appointment.getlocationDate(appointmentToLocation, appointmenttoStart);
+        
+        LocalDate localDate = LocalDate.parse(dateL); 
+        
+        newaptDate.setValue(localDate);
         newaptDate.setShowWeekNumbers(false);
         //getDayCellFactory();
      
@@ -212,22 +227,48 @@ public class UpdateAptController implements Initializable {
 //    LocalDate localDate = LocalDate.parse(dateString, formatter);
 //    return localDate;
 //}
+     public void date(){
+         
+         updateaptDate.getSelectionModel().select(date);
+     }
+     
+     public void startTime(){
+         String time = Appointment.getlocationDate(appointmentToLocation, appointmenttoStart);
+         updateaptStartTime.getSelectionModel().select(time);
+     }
+     
+     public void endTime(){
+         String time = Appointment.getlocationDate(appointmentToLocation, appointmenttoEnd);
+         updateaptEndTime.getSelectionModel().select(time);
+     }
+     
+     public void customerName(){
+         String name = Customer.getName(appointmentToCustomerId);
+         
+         updateaptClientName.setText(name);
+     }
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        updateAppointmentType.setItems(AppointmentType);
-        updateaptLocation.getItems().addAll(City.allCities);
-        updateaptStartTime.setItems(AptStartTime);
-        updateaptStartTime.getSelectionModel().select(Appointment.getTime(appointmentToStart()));
-        updateaptEndTime.setItems(AptEndTime);
-        updateaptClientName.setText(customerToCustName());
+        customerName();
+        updateaptType.getSelectionModel().select(appointmentToType());
+        updateaptLocation.getSelectionModel().select(appointmentToLocation());
+        date();
+        startTime();
+        endTime();
+        updateaptContact.setText(appointmentToContact);
+        updateaptUrl.setText(appointmnetToUrl);
+        updateaptTitle.setText(appointmentToTitle);
+        updateaptDescription.setText(appointmnetToDiscription);
+   
         // Disable Monday, Tueday, Wednesday.
         SetDate();
         Callback<DatePicker, DateCell> dayCellFactory= this.getDayCellFactory();
         updateaptDate.setDayCellFactory(dayCellFactory);
+      
 }
 }
 

@@ -50,8 +50,8 @@
       <TextField fx:id="DeleteCustomerName" editable="false" layoutX="30.0" layoutY="97.0" prefHeight="25.0" prefWidth="282.0" />
       <TextField fx:id="DeleteCustomerPhone" editable="false" layoutX="30.0" layoutY="151.0" prefHeight="25.0" prefWidth="282.0" />
       <TextField fx:id="DeleteCustomerAddress" editable="false" layoutX="30.0" layoutY="206.0" prefHeight="25.0" prefWidth="282.0" />
-      <TextField fx:id="DeleteCustomerAddress2" editable="false" layoutX="29.0" layoutY="258.0" prefHeight="25.0" prefWidth="282.0" />
-      <ComboBox fx:id="DeleteCustomerCity" layoutX="30.0" layoutY="310.0" onAction="#SetCountry" prefHeight="25.0" prefWidth="282.0" />
+      <TextField fx:id="DeleteCustomerAddress2" editable="false" layoutX="29.0" layoutY="258.0" onAction="#SetCountry" prefHeight="25.0" prefWidth="282.0" />
+      <ComboBox fx:id="DeleteCustomerCity" disable="true" editable="false" layoutX="30.0" layoutY="310.0" prefHeight="25.0" prefWidth="282.0" />
       <TextField fx:id="DeleteCustomerCountry" editable="false" layoutX="30.0" layoutY="363.0" prefHeight="25.0" prefWidth="282.0" />
       <TextField fx:id="DeleteCustomerZipCode" editable="false" layoutX="30.0" layoutY="416.0" prefHeight="25.0" prefWidth="282.0" />
       <Button layoutX="35.0" layoutY="464.0" mnemonicParsing="false" onAction="#DeleteCustomer" prefHeight="43.0" prefWidth="115.0" text="Delete">

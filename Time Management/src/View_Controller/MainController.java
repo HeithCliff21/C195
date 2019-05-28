@@ -232,15 +232,23 @@ public class MainController implements Initializable {
     void UpdateApt(ActionEvent event) throws IOException {
         Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
         updateAptId = appointment.getAppointmentId();
-        updateAptType = appointment.getType();
-        updateAptLocation = appointment.getType();
-        //updateAptDate = appointment.getType();
+        updateAptCustId = appointment.getCustomerId();
+        updateAptTitle = appointment.getTitle();
+        updateAptDescription = appointment.getDescription();
+        updateAptLocation = appointment.getLocation();
+        updateAptContact = appointment.getContact();
+        updateAptUrl = appointment.getUrl();
         updateAptStart = appointment.getStart();
-        updateAptEnd = appointment.getType();
-        updateAptContact = appointment.getType();
-        updateAptUrl = appointment.getType();
-        updateAptTitle = appointment.getType();
-        updateAptDescription = appointment.getType();
+        updateAptEnd = appointment.getEnd();
+        updateAptType = appointment.getType();
+        
+//        updateAptDate = appointment.getDate();
+        
+        
+        
+        
+        
+        
         
         Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
         Scene scene = new Scene(UpdateCustomer);

@@ -118,7 +118,7 @@ public class Customer{
                 + "WHERE addressId=" + addressId;
             int updateOne = statement.executeUpdate(queryOne);
             if(updateOne == 1) {
-                String queryTwo = "UPDATE customer SET customerName='" + Name + "', addressId=" + addressId + "', lastUpdate=CURRENT_TIMESTAMP , lastUpdateBy='" + username + "'" 
+                String queryTwo = "UPDATE customer SET customerName='" + Name + "', addressId='" + addressId + "', active='1' , lastUpdate=CURRENT_TIMESTAMP , lastUpdateBy='" + username + "'" 
                         + " WHERE customerId=" + customerId;
                 int updateTwo = statement.executeUpdate(queryTwo);
                 if(updateTwo == 1) {
@@ -135,10 +135,10 @@ public class Customer{
     public static boolean deleteCustomer(int customerId, int addressId) {
         try {
             Statement statement = DataBase.conn.createStatement();
-            String queryOne = "DELETE FROM address WHERE addressId=" + addressId;
+            String queryOne = "DELETE FROM customer WHERE customerId=" + customerId;
             int updateOne = statement.executeUpdate(queryOne);
             if(updateOne == 1) {
-                String queryTwo = "DELETE FROM customer WHERE customerId=" + customerId;
+                String queryTwo = "DELETE FROM address WHERE addressId=" + addressId;
                 int updateTwo = statement.executeUpdate(queryTwo);
                 if(updateTwo == 1) {
                     return true;

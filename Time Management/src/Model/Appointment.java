@@ -13,8 +13,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import static java.time.ZoneOffset.UTC;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import static java.time.format.DateTimeFormatter.ofPattern;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -215,6 +217,36 @@ public class Appointment {
     
     
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    
+    // Switches UTC to Location
+    public static String getlocationDateTime(String location, String time){
+        //Seting Start and End to Format to be converted to Location Time
+        LocalDateTime srt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
+        ZonedDateTime srtZ = srt.atZone(UTC);
+       
+        //Changing to Location Time
+        LocalDateTime srtL = LocalDateTime.ofInstant(srtZ.toInstant(), ZoneId.of(location));
+                       
+        String srtS = srtL.toString();      
+        
+        return srtS;    
+    }
+    // Pulls Time to Location
+    public static String getlocationTime(String location, String Ttime){
+        String time = getlocationDateTime(location,Ttime);
+        String timeS[] =time.split(" ");
+        String timeL = timeS[1]; 
+        
+        return timeL;
+    }
+    //Pulls Date to Location
+    public static String getlocationDate(String location, String Ttime){
+        String date = getlocationDateTime(location,Ttime);
+        String dateS[] =date.split(" ");
+        String dateL = dateS[0]; 
+        
+        return dateL;
+    }
     
     public static String getDateTime(String date, String time, String location) {
         String dateInString = date + " " + time;
