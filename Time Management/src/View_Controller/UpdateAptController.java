@@ -8,7 +8,9 @@ package View_Controller;
 import Model.Appointment;
 import Model.City;
 import Model.Customer;
-import static View_Controller.MainController.appointmentToCustomerId;
+import Model.CustomerTable;
+import static View_Controller.MainController.appointmentToAppointmentId;
+//import static View_Controller.MainController.appointmentToCustId;
 import static View_Controller.MainController.appointmentToType;
 import static View_Controller.MainController.appointmentToLocation;
 import static View_Controller.MainController.appointmentToStart;
@@ -16,7 +18,7 @@ import static View_Controller.MainController.appointmentToEnd;
 import static View_Controller.MainController.appointmentToContact;
 import static View_Controller.MainController.appointmentToUrl;
 import static View_Controller.MainController.appointmentToTitle;
-import static View_Controller.MainController.appointmentToDiscription;
+import static View_Controller.MainController.appointmentToDescription;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
@@ -137,7 +139,7 @@ public class UpdateAptController implements Initializable {
      @FXML
     void updateAptSave(ActionEvent event) throws IOException, ParseException {
         
-        int aptId = customerToCustomerId();
+        int aptId = appointmentToAppointmentId();
         String title = updateaptTitle.getText();
         String description = updateaptDescription.getText();
         String location = SetLocationName();
@@ -153,13 +155,13 @@ public class UpdateAptController implements Initializable {
         System.out.println("end: " + setAptEnd());
         System.out.println("location: " + SetLocationName());
         
-//        Appointment.updateApt(aptId, title, description, location, date, contact, type, url, start, end);
-//        
-//        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
-//        Scene scene = new Scene(UpdateCustomer);
-//        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-//        window.setScene(scene);
-//        window.show();
+        Appointment.updateApt(aptId, title, description, location, date, contact, type, url, start, end);
+        
+        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
+        Scene scene = new Scene(UpdateCustomer);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
     }
     
     @FXML
@@ -197,7 +199,7 @@ public class UpdateAptController implements Initializable {
      public void SetDate() throws ParseException {
         DatePicker newaptDate = new DatePicker();
         
-        String dateL = Appointment.getlocationDate(appointmentToLocation, appointmenttoStart);
+        String dateL = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
         
         LocalDate localDate = LocalDate.parse(dateL); 
         
@@ -229,23 +231,25 @@ public class UpdateAptController implements Initializable {
 //}
      public void date(){
          
-         updateaptDate.getSelectionModel().select(date);
+      //   updateaptDate.getSelectionModel().select(date);
      }
      
      public void startTime(){
-         String time = Appointment.getlocationDate(appointmentToLocation, appointmenttoStart);
+         String time = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
          updateaptStartTime.getSelectionModel().select(time);
      }
      
      public void endTime(){
-         String time = Appointment.getlocationDate(appointmentToLocation, appointmenttoEnd);
+         String time = Appointment.getlocationDate(appointmentToLocation(), appointmentToEnd());
          updateaptEndTime.getSelectionModel().select(time);
      }
      
      public void customerName(){
-         String name = Customer.getName(appointmentToCustomerId);
+         Customer.getAllCustomers();
          
-         updateaptClientName.setText(name);
+        // String name = CustomerTable.getCustomerName(appointmentToCustId());
+         
+        // updateaptClientName.setText(name);
      }
 
     /**
@@ -253,19 +257,23 @@ public class UpdateAptController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        customerName();
-        updateaptType.getSelectionModel().select(appointmentToType());
-        updateaptLocation.getSelectionModel().select(appointmentToLocation());
+        //customerName();
+        //updateaptType.getSelectionModel().select(appointmentToType());
+        //updateaptLocation.getSelectionModel().select(appointmentToLocation());
         date();
         startTime();
         endTime();
-        updateaptContact.setText(appointmentToContact);
-        updateaptUrl.setText(appointmnetToUrl);
-        updateaptTitle.setText(appointmentToTitle);
-        updateaptDescription.setText(appointmnetToDiscription);
+        updateaptContact.setText(appointmentToContact());
+        updateaptUrl.setText(appointmentToUrl());
+        updateaptTitle.setText(appointmentToTitle());
+        updateaptDescription.setText(appointmentToDescription());
    
-        // Disable Monday, Tueday, Wednesday.
-        SetDate();
+        try {
+            // Disable Monday, Tueday, Wednesday.
+            SetDate();
+        } catch (ParseException ex) {
+            Logger.getLogger(UpdateAptController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Callback<DatePicker, DateCell> dayCellFactory= this.getDayCellFactory();
         updateaptDate.setDayCellFactory(dayCellFactory);
       

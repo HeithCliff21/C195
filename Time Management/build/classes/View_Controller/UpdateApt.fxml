@@ -65,7 +65,7 @@
          </font>
       </Label>
       <TextField fx:id="updateaptClientName" layoutX="16.0" layoutY="72.0" prefHeight="25.0" prefWidth="334.0" promptText="Clients Name" />
-      <ComboBox fx:id="updateAppointmentType" layoutX="16.0" layoutY="132.0" prefHeight="25.0" prefWidth="171.0" />
+      <ComboBox fx:id="updateaptType" layoutX="16.0" layoutY="132.0" prefHeight="25.0" prefWidth="171.0" />
       <ComboBox fx:id="updateaptLocation" layoutX="205.0" layoutY="132.0" prefHeight="25.0" prefWidth="146.0" />
       <DatePicker fx:id="updateaptDate" layoutX="14.0" layoutY="192.0" prefHeight="25.0" prefWidth="115.0" />
       <ComboBox fx:id="updateaptStartTime" layoutX="139.0" layoutY="192.0" prefHeight="25.0" prefWidth="101.0" />

@@ -209,6 +209,39 @@ public class Appointment {
 //}
 //     
 //    }
+    
+//    public static String getName(int custID){
+//        try {
+//            Statement statement = DataBase.conn.createStatement();         
+//            String query = "SELECT * FROM customer WHERE customerID = '" + custID + "';";
+//            statement.executeQuery(query);
+//            
+//            
+//            
+//            ResultSet rs = statement.executeQuery(query);
+//             while(rs.next()){
+//                 Customer newCustomer = new Customer(
+//                 rs.getInt("customerId"),
+//                 rs.getString("customerName"),
+//                 rs.getInt("addressId"));
+//                 
+//                 System.out.println("CityID: " + newCustomer.getID());
+//                 System.out.println("CityName: " + newCustomer.getName());
+//                 System.out.println("CounrtyID: " + newCustomer.getAddressID());
+//             
+//                allCustomers.add(newCustomer);
+//             }
+//             statement.close();
+//             return allAppointments;
+//             
+//        }catch (SQLException e) {
+//            System.out.println("SQLException: " + e.getMessage());
+//            return null;
+//    }
+//    }
+        
+    
+    
     public static String getTime(String time){
        LocalDateTime ldt =  LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
@@ -283,24 +316,24 @@ public class Appointment {
         }
         return false;
 }
-//      public static boolean updateApt(int customerId, String title, String description, String location, String date, String contact, String type, String url, String start, String end) {
-//        try {
-//                    String startDateTime = getDateTime(date, start, location);
-//                    String endDateTime = getDateTime(date, end, location);
-//                    Statement statement = DataBase.conn.createStatement();
-//                    User user = User.getCurrentUser();
-//                    String username = user.getUsername();
-//                    int userId = user.getUserId();
-//                    String query = "UPDATE appointment SET title='" + title + "', description='" + description + "', contact='" +
-//                        contact + "', location='" + location + "', start='" + tsStart + "', end='" + tsEnd + "' WHERE " +
-//                        "appointmentId='" + id + "'";
-//                    int update = statement.executeUpdate(query);
-//                    if(update == 1) {
-//                        return true;
-//                    }
-//        } catch (SQLException e) {
-//            System.out.println("SQLException: " + e.getMessage());
-//        }
-//        return false;
-//}
+      public static boolean updateApt(int aptId, String title, String description, String location, String date, String contact, String type, String url, String start, String end) {
+        try {
+                    String startDateTime = getDateTime(date, start, location);
+                    String endDateTime = getDateTime(date, end, location);
+                    Statement statement = DataBase.conn.createStatement();
+                    User user = User.getCurrentUser();
+                    String username = user.getUsername();
+                    int userId = user.getUserId();
+                    String query = "UPDATE appointment SET title='" + title + "', description='" + description + "', contact='" + contact 
+                      + "', location='" + location + "', start='" + startDateTime + "', end='" + endDateTime + "', lastUpdate=CURRENT_TIMESTAMP, lastUpdateBy='" + username 
+                      + "' WHERE appointmentId='" + aptId + "'";
+                    int update = statement.executeUpdate(query);
+                    if(update == 1) {
+                        return true;
+                    }
+        } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+        }
+        return false;
+}
 }

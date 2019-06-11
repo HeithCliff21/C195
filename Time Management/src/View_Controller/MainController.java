@@ -73,6 +73,7 @@ public class MainController implements Initializable {
    
     private static Appointment updateAppointmnet;
     private static int updateAptId;
+    private static int updateAptCustId;
     private static String updateAptType;
     private static String updateAptLocation;
     private static String updateAptStart;
@@ -111,6 +112,9 @@ public class MainController implements Initializable {
     public static int appointmentToAppointmentId() {
         return updateAptId;
     }   
+    public static int appointmentToCustId() {
+        return updateAptCustId;
+    } 
     public static String appointmentToType() {
         return updateAptType;
     }
