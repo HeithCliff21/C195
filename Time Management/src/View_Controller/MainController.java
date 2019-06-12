@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -74,6 +75,7 @@ public class MainController implements Initializable {
     private static Appointment updateAppointmnet;
     private static int updateAptId;
     private static int updateAptCustId;
+    private static String updateAptCustName;
     private static String updateAptType;
     private static String updateAptLocation;
     private static String updateAptStart;
@@ -114,6 +116,9 @@ public class MainController implements Initializable {
     }   
     public static int appointmentToCustId() {
         return updateAptCustId;
+    } 
+    public static String appointmentToCustName() {
+        return updateAptCustName;
     } 
     public static String appointmentToType() {
         return updateAptType;
@@ -232,7 +237,19 @@ public class MainController implements Initializable {
         window.setScene(scene);
         window.show();
     }
-       @FXML
+       
+//    @FXML
+//    String CustName(int custId){
+//        
+//        MainCustomersTable.getSelectionModel().select(custId);
+//        CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
+//        updateCustomerName = customer.getCustomerName();
+//        
+//        String updateCustname = customer.getCustomerName();
+//        return updateCustname;
+//    }
+    
+    @FXML
     void UpdateApt(ActionEvent event) throws IOException {
         Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
         updateAptId = appointment.getAppointmentId();
@@ -246,6 +263,12 @@ public class MainController implements Initializable {
         updateAptEnd = appointment.getEnd();
         updateAptType = appointment.getType();
         
+//        MainCustomersTable.getSelectionModel().setSelectedItem(updateAptCustId);
+//        MainCustomersTable.getSelectionModel().select(updateAptCustId);
+//        CustomerTable customer = MainCustomersTable.getSelectionModel().selectedItem();
+//        CustomerTable test = MainCustomerTable.getSelectedItems();
+//        updateAptCustName = customer.getCustomerName();
+                 
 //        updateAptDate = appointment.getDate();
         
         

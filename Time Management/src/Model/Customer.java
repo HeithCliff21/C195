@@ -55,7 +55,22 @@ public class Customer{
         this.addressId = AddressID;
     }
     
-     
+    public String getCustName(int custID){
+        
+        try {
+        Statement statement = DataBase.conn.createStatement();
+        String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
+        ResultSet rs = statement.executeQuery(query);
+        String custname = rs.getString("customerName");
+        
+        statement.close();
+        return custname;
+     }catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return null;
+}
+}
+           
     // Returns all Customers in Database
     public static ObservableList<Customer> getAllCustomers(){
         allCustomers.clear();

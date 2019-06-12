@@ -9,8 +9,9 @@ import Model.Appointment;
 import Model.City;
 import Model.Customer;
 import Model.CustomerTable;
+import Model.DataBase;
 import static View_Controller.MainController.appointmentToAppointmentId;
-//import static View_Controller.MainController.appointmentToCustId;
+import static View_Controller.MainController.appointmentToCustId;
 import static View_Controller.MainController.appointmentToType;
 import static View_Controller.MainController.appointmentToLocation;
 import static View_Controller.MainController.appointmentToStart;
@@ -19,8 +20,12 @@ import static View_Controller.MainController.appointmentToContact;
 import static View_Controller.MainController.appointmentToUrl;
 import static View_Controller.MainController.appointmentToTitle;
 import static View_Controller.MainController.appointmentToDescription;
+//import static View_Controller.MainController.appointmentToCustName;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -244,12 +249,28 @@ public class UpdateAptController implements Initializable {
          updateaptEndTime.getSelectionModel().select(time);
      }
      
-     public void customerName(){
-         Customer.getAllCustomers();
-         
+
+     public String customerName(int custID){
+         //Customer.getAllCustomers();
+        try {
+        Statement statement = DataBase.conn.createStatement();
+        String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
+        ResultSet rs = statement.executeQuery(query);
+        String custname = rs.getString("customerName");
+        
+        statement.close();
+        return custname;
+     }catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return null;
+}
+//        int custId = appointmentToCustId();
+//        String custName = Customer.getCustName(custId);
+//        String custname = Customer.getCustName(custId);
+        
         // String name = CustomerTable.getCustomerName(appointmentToCustId());
-         
         // updateaptClientName.setText(name);
+//        return custname;
      }
 
     /**
@@ -267,6 +288,7 @@ public class UpdateAptController implements Initializable {
         updateaptUrl.setText(appointmentToUrl());
         updateaptTitle.setText(appointmentToTitle());
         updateaptDescription.setText(appointmentToDescription());
+        updateaptClientName.setText(customerName(appointmentToCustId()));
    
         try {
             // Disable Monday, Tueday, Wednesday.

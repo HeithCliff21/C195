@@ -254,11 +254,17 @@ public class Appointment {
     // Switches UTC to Location
     public static String getlocationDateTime(String location, String time){
         //Seting Start and End to Format to be converted to Location Time
-        LocalDateTime srt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
-        ZonedDateTime srtZ = srt.atZone(UTC);
+        LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        ZoneId ZoneLoc = ZoneId.of("UTC");
+        ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
+       
+//        ZonedDateTime srt = time.atZone(UTC);
+//                LocalDateTime.parse(time).atZone(UTC);
+//                LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
+//        ZonedDateTime srtZ = LocalDateTime.atZone(UTC);
        
         //Changing to Location Time
-        LocalDateTime srtL = LocalDateTime.ofInstant(srtZ.toInstant(), ZoneId.of(location));
+        LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
                        
         String srtS = srtL.toString();      
         
