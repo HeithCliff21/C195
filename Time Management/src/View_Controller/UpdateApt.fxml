@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
+<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
      <children>
       <Label layoutX="16.0" layoutY="14.0" prefHeight="27.0" prefWidth="193.0" text="Update Appointment">
          <font>
@@ -64,22 +64,22 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <TextField fx:id="updateaptClientName" layoutX="16.0" layoutY="72.0" prefHeight="25.0" prefWidth="334.0" promptText="Clients Name" />
+      <TextField fx:id="updateaptClientName" editable="false" layoutX="16.0" layoutY="72.0" prefHeight="27.0" prefWidth="368.0" promptText="Clients Name" />
       <ComboBox fx:id="updateaptType" layoutX="16.0" layoutY="132.0" prefHeight="25.0" prefWidth="171.0" />
-      <ComboBox fx:id="updateaptLocation" layoutX="205.0" layoutY="132.0" prefHeight="25.0" prefWidth="146.0" />
+      <ComboBox fx:id="updateaptLocation" layoutX="205.0" layoutY="132.0" prefHeight="27.0" prefWidth="180.0" />
       <DatePicker fx:id="updateaptDate" layoutX="14.0" layoutY="192.0" prefHeight="25.0" prefWidth="115.0" />
-      <ComboBox fx:id="updateaptStartTime" layoutX="139.0" layoutY="192.0" prefHeight="25.0" prefWidth="101.0" />
-      <ComboBox fx:id="updateaptEndTime" layoutX="250.0" layoutY="192.0" prefHeight="25.0" prefWidth="101.0" />
-      <TextField fx:id="updateaptContact" layoutX="15.0" layoutY="246.0" prefHeight="25.0" prefWidth="334.0" />
-      <TextField fx:id="updateaptUrl" layoutX="17.0" layoutY="303.0" prefHeight="25.0" prefWidth="334.0" />
-      <TextField fx:id="updateaptTitle" layoutX="16.0" layoutY="360.0" prefHeight="25.0" prefWidth="334.0" />
-      <TextArea fx:id="updateaptDescription" layoutX="17.0" layoutY="414.0" prefHeight="75.0" prefWidth="334.0" />
-      <Button layoutX="22.0" layoutY="504.0" mnemonicParsing="false" onAction="#updateAptSave" prefHeight="43.0" prefWidth="115.0" text="Save">
+      <ComboBox fx:id="updateaptStartTime" layoutX="139.0" layoutY="192.0" prefHeight="27.0" prefWidth="115.0" />
+      <ComboBox fx:id="updateaptEndTime" layoutX="268.0" layoutY="192.0" prefHeight="27.0" prefWidth="115.0" />
+      <TextField fx:id="updateaptContact" layoutX="15.0" layoutY="246.0" prefHeight="27.0" prefWidth="368.0" />
+      <TextField fx:id="updateaptUrl" layoutX="17.0" layoutY="303.0" prefHeight="27.0" prefWidth="368.0" />
+      <TextField fx:id="updateaptTitle" layoutX="16.0" layoutY="360.0" prefHeight="27.0" prefWidth="368.0" />
+      <TextArea fx:id="updateaptDescription" layoutX="17.0" layoutY="414.0" prefHeight="75.0" prefWidth="368.0" />
+      <Button layoutX="18.0" layoutY="497.0" mnemonicParsing="false" onAction="#updateAptSave" prefHeight="43.0" prefWidth="115.0" text="Save">
          <font>
             <Font name="System Bold" size="19.0" />
          </font>
       </Button>
-      <Button layoutX="223.0" layoutY="504.0" mnemonicParsing="false" onAction="#updateAptCancel" prefHeight="43.0" prefWidth="123.0" text="Cancel">
+      <Button layoutX="264.0" layoutY="497.0" mnemonicParsing="false" onAction="#updateAptCancel" prefHeight="43.0" prefWidth="123.0" text="Cancel">
          <font>
             <Font name="System Bold" size="19.0" />
          </font>
@@ -89,7 +89,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="50.0" layoutX="-5.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="366.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="50.0" layoutX="-5.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" width="402.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>

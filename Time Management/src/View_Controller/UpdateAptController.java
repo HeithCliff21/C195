@@ -31,6 +31,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -63,7 +64,7 @@ public class UpdateAptController implements Initializable {
     @FXML
     private TextField updateaptClientName;
     @FXML
-    private ComboBox updateAppointmentType;
+    private ComboBox updateaptType;
     @FXML
     private DatePicker updateaptDate;
     @FXML
@@ -91,11 +92,26 @@ public class UpdateAptController implements Initializable {
     private final ObservableList<String> AptStartTime = FXCollections.observableArrayList("8:00 AM","8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM");
     
     private final ObservableList<String> AptEndTime = FXCollections.observableArrayList("8:30 AM","9:00 AM","9:30 AM","10:00 AM","10:30 AM","11:00 AM","11:30 AM","12:00 PM","12:30 PM","1:00 PM","1:30 PM","2:00 PM","2:30 PM","3:00 PM","3:30 PM","4:00 PM","4:30 PM","5:00 PM");
-    
+      
     public String setAptType(){
-        String Type = (String) updateAppointmentType.getSelectionModel().getSelectedItem();
+        String Type = (String) updateaptType.getSelectionModel().getSelectedItem();
         return Type;
     }
+    
+    public int LocationSet(){  
+        String location = appointmentToLocation();
+        if(location != "America/Phoniex") {
+            int cityId = 1;
+            return cityId;
+        } else if (location != "America/New_York") {
+            int cityId = 2;
+            return cityId;
+        }else{
+            int cityId = 3;
+            return cityId;
+        }
+     }
+    
     //Set Location City Object to String to use for correct DateTime Format
     public String SetLocationName(){
         City city = updateaptLocation.getSelectionModel().getSelectedItem();
@@ -139,6 +155,8 @@ public class UpdateAptController implements Initializable {
         String Date = updateaptDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return Date;
     }
+    
+    
     
     
      @FXML
@@ -210,6 +228,9 @@ public class UpdateAptController implements Initializable {
         
         newaptDate.setValue(localDate);
         newaptDate.setShowWeekNumbers(false);
+        
+        
+        //updateaptDate.getSelectionModel().select(dateL);
         //getDayCellFactory();
      
         // Converter
@@ -234,18 +255,14 @@ public class UpdateAptController implements Initializable {
 //    LocalDate localDate = LocalDate.parse(dateString, formatter);
 //    return localDate;
 //}
-     public void date(){
-         
-      //   updateaptDate.getSelectionModel().select(date);
-     }
-     
-     public void startTime(){
-         String time = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
+   
+     public void startTime() throws ParseException{
+         String time = Appointment.getlocationTime(appointmentToLocation(), appointmentToStart());
          updateaptStartTime.getSelectionModel().select(time);
      }
      
-     public void endTime(){
-         String time = Appointment.getlocationDate(appointmentToLocation(), appointmentToEnd());
+     public void endTime() throws ParseException{
+         String time = Appointment.getlocationTime(appointmentToLocation(), appointmentToEnd());
          updateaptEndTime.getSelectionModel().select(time);
      }
      
@@ -281,14 +298,27 @@ public class UpdateAptController implements Initializable {
         //customerName();
         //updateaptType.getSelectionModel().select(appointmentToType());
         //updateaptLocation.getSelectionModel().select(appointmentToLocation());
-        date();
-        startTime();
-        endTime();
+        updateaptType.setItems(AppointmentType);
+        updateaptLocation.getItems().addAll(City.allCities);
+        updateaptStartTime.setItems(AptStartTime);
+        updateaptEndTime.setItems(AptEndTime);
+        try {
+            startTime();
+        } catch (ParseException ex) {
+            Logger.getLogger(UpdateAptController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            endTime();
+        } catch (ParseException ex) {
+            Logger.getLogger(UpdateAptController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         updateaptContact.setText(appointmentToContact());
         updateaptUrl.setText(appointmentToUrl());
         updateaptTitle.setText(appointmentToTitle());
         updateaptDescription.setText(appointmentToDescription());
         updateaptClientName.setText(customerName(appointmentToCustId()));
+        updateaptType.getSelectionModel().select(appointmentToType());
+        updateaptLocation.getSelectionModel().select(LocationSet());
    
         try {
             // Disable Monday, Tueday, Wednesday.

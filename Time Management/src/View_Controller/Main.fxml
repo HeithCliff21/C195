@@ -13,10 +13,10 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="945.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainController">
+<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="1122.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainController">
     
  <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="49.0" stroke="BLACK" strokeType="INSIDE" width="950.0">
+      <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="49.0" stroke="BLACK" strokeType="INSIDE" width="1124.0">
          <fill>
             <LinearGradient endX="1.0" endY="1.0">
                <stops>
@@ -50,28 +50,28 @@
             </TableView>
          </children>
       </Pane>
-      <Pane layoutX="475.0" layoutY="49.0" prefHeight="369.0" prefWidth="475.0" style="-fx-border-color: grey;">
+      <Pane layoutX="475.0" layoutY="49.0" prefHeight="369.0" prefWidth="649.0" style="-fx-border-color: grey;">
          <children>
-            <Button layoutX="285.0" layoutY="303.0" mnemonicParsing="false" onAction="#UpdateApt" prefHeight="32.0" prefWidth="89.0" text="Update" />
-            <Button layoutX="187.0" layoutY="303.0" mnemonicParsing="false" onAction="#AddApt" prefHeight="32.0" prefWidth="89.0" text="Add" />
-            <Button layoutX="382.0" layoutY="303.0" mnemonicParsing="false" onAction="#DeleteApt" prefHeight="32.0" prefWidth="89.0" text="Delete" />
+            <Button layoutX="448.0" layoutY="303.0" mnemonicParsing="false" onAction="#UpdateApt" prefHeight="32.0" prefWidth="89.0" text="Update" />
+            <Button layoutX="350.0" layoutY="303.0" mnemonicParsing="false" onAction="#AddApt" prefHeight="32.0" prefWidth="89.0" text="Add" />
+            <Button layoutX="546.0" layoutY="303.0" mnemonicParsing="false" onAction="#DeleteApt" prefHeight="32.0" prefWidth="89.0" text="Delete" />
             <Label layoutX="14.0" layoutY="4.0" prefHeight="21.0" prefWidth="123.0" text="Appointments">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font></Label>
-            <TabPane layoutX="5.0" layoutY="30.0" prefHeight="267.0" prefWidth="466.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane layoutX="5.0" layoutY="30.0" prefHeight="267.0" prefWidth="641.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="All">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="AllAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="466.0">
+                              <TableView fx:id="AllAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="641.0">
                                  <columns>
-                                     <TableColumn fx:id="AllAptID" prefWidth="67.0" text="Apt ID" />
-                                    <TableColumn fx:id="AllClientID" prefWidth="75.0" text="Client ID" />
-                                    <TableColumn fx:id="AllLocation" prefWidth="123.0" text="Location" />
-                                    <TableColumn fx:id="AllStartTime" minWidth="0.0" prefWidth="100.0" text="Start Time" />
-                                    <TableColumn fx:id="AllEndTime" minWidth="0.0" prefWidth="100.0" text="End Time" />
+                                     <TableColumn fx:id="AllAptID" prefWidth="64.0" text="Apt ID" />
+                                    <TableColumn fx:id="AllClientID" prefWidth="77.0" text="Client ID" />
+                                    <TableColumn fx:id="AllLocation" prefWidth="159.0" text="Location" />
+                                    <TableColumn fx:id="AllStartTime" minWidth="0.0" prefWidth="172.0" text="Start Time" />
+                                    <TableColumn fx:id="AllEndTime" minWidth="0.0" prefWidth="168.0" text="End Time" />
                                  </columns>
                               </TableView>
                            </children>
@@ -82,13 +82,13 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="MonthAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="466.0">
+                              <TableView fx:id="MonthAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="641.0">
                                  <columns>                                  
-                                    <TableColumn fx:id="MonthAptID" prefWidth="67.0" text="Apt ID" />
-                                    <TableColumn fx:id="MonthClientID" prefWidth="75.0" text="Client ID" />
-                                    <TableColumn fx:id="MonthLocation" prefWidth="123.0" text="Location" />
-                                    <TableColumn fx:id="MonthStartTime" minWidth="0.0" prefWidth="100.0" text="Start Time" />
-                                    <TableColumn fx:id="MonthEndTime" minWidth="0.0" prefWidth="100.0" text="End Time" />
+                                    <TableColumn fx:id="MonthAptID" prefWidth="64.0" text="Apt ID" />
+                                    <TableColumn fx:id="MonthClientID" prefWidth="77.0" text="Client ID" />
+                                    <TableColumn fx:id="MonthLocation" prefWidth="159.0" text="Location" />
+                                    <TableColumn fx:id="MonthStartTime" minWidth="0.0" prefWidth="172.0" text="Start Time" />
+                                    <TableColumn fx:id="MonthEndTime" minWidth="0.0" prefWidth="168.0" text="End Time" />
                                  </columns>
                               </TableView>
                            </children>
@@ -99,13 +99,13 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <TableView fx:id="WeekAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="466.0">
+                              <TableView fx:id="WeekAptTable" layoutX="-1.0" layoutY="-1.0" prefHeight="226.0" prefWidth="641.0">
                                  <columns>                                  
-                                    <TableColumn fx:id="WeekAptID" prefWidth="67.0" text="Apt ID" />
-                                    <TableColumn fx:id="WeekClientID" prefWidth="75.0" text="Client ID" />
-                                    <TableColumn fx:id="WeekLocation" prefWidth="123.0" text="Location" />
-                                    <TableColumn fx:id="WeekStartTime" minWidth="0.0" prefWidth="100.0" text="Start Time" />
-                                    <TableColumn fx:id="WeekEndTime" minWidth="0.0" prefWidth="100.0" text="End Time" />
+                                    <TableColumn fx:id="WeekAptID" prefWidth="64.0" text="Apt ID" />
+                                    <TableColumn fx:id="WeekClientID" prefWidth="77.0" text="Client ID" />
+                                    <TableColumn fx:id="WeekLocation" prefWidth="159.0" text="Location" />
+                                    <TableColumn fx:id="WeekStartTime" minWidth="0.0" prefWidth="172.0" text="Start Time" />
+                                    <TableColumn fx:id="WeekEndTime" minWidth="0.0" prefWidth="168.0" text="End Time" />
                                  </columns>
                               </TableView>
                            </children>
@@ -116,6 +116,6 @@
             </TabPane>
          </children>
       </Pane>
-      <Button layoutX="847.0" layoutY="9.0" mnemonicParsing="false" onAction="#MainExit" prefHeight="32.0" prefWidth="89.0" text="Exit" />
+      <Button layoutX="1021.0" layoutY="9.0" mnemonicParsing="false" onAction="#MainExit" prefHeight="32.0" prefWidth="89.0" text="Exit" />
    </children>
 </AnchorPane>

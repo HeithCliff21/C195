@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -242,21 +243,26 @@ public class Appointment {
         
     
     
-    public static String getTime(String time){
-       LocalDateTime ldt =  LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s"));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-        return ldt.format(formatter);
-    }
+//    public static String getTime(String time){
+//       LocalDateTime ldt =  LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+//        return ldt.format(formatter);
+//    }
     
     
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
+    
     // Switches UTC to Location
     public static String getlocationDateTime(String location, String time){
         //Seting Start and End to Format to be converted to Location Time
-        LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));
-        ZoneId ZoneLoc = ZoneId.of("UTC");
-        ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
+        String time2 = time.replaceAll("\\.0*$", "");
+        
+        LocalDateTime ldt = LocalDateTime.parse(time2, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        ZoneId ZoneLoc = ZoneId.of(location);
+        ZonedDateTime Appointment = ldt.atZone(UTC);
        
 //        ZonedDateTime srt = time.atZone(UTC);
 //                LocalDateTime.parse(time).atZone(UTC);
@@ -265,18 +271,24 @@ public class Appointment {
        
         //Changing to Location Time
         LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
-                       
-        String srtS = srtL.toString();      
+                           
+        String srtS = srtL.toString();
+        String dtime = srtL.format(formatter);
         
-        return srtS;    
+        return dtime;    
     }
     // Pulls Time to Location
-    public static String getlocationTime(String location, String Ttime){
+    public static String getlocationTime(String location, String Ttime) throws ParseException{
         String time = getlocationDateTime(location,Ttime);
         String timeS[] =time.split(" ");
-        String timeL = timeS[1]; 
+        String timeL = timeS[1];
         
-        return timeL;
+        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+        
+        String time12 = date12Format.format(date24Format.parse(timeL));
+       
+        return time12;
     }
     //Pulls Date to Location
     public static String getlocationDate(String location, String Ttime){
@@ -284,7 +296,14 @@ public class Appointment {
         String dateS[] =date.split(" ");
         String dateL = dateS[0]; 
         
-        return dateL;
+        DateTimeFormatter dateold = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter datenew = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+       
+        String dateO = datenew.format(dateold.parse(dateL));
+        
+        
+        
+        return dateO;
     }
     
     public static String getDateTime(String date, String time, String location) {
