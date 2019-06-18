@@ -61,6 +61,32 @@ public class MainController implements Initializable {
     @FXML 
     private TableColumn<Appointment, String> AllEndTime;
     
+    @FXML
+    private TableView<Appointment> MonthAptTable;
+    @FXML
+    private TableColumn<Appointment, Integer> MonthAptID;
+    @FXML
+    private TableColumn<Appointment, Integer> MonthClientID;
+    @FXML
+    private TableColumn<Appointment, String> MonthLocation;
+    @FXML
+    private TableColumn<Appointment, String> MonthStartTime;
+    @FXML 
+    private TableColumn<Appointment, String> MonthEndTime;
+    
+    @FXML
+    private TableView<Appointment> WeekAptTable;
+    @FXML
+    private TableColumn<Appointment, Integer> WeekAptID;
+    @FXML
+    private TableColumn<Appointment, Integer> WeekClientID;
+    @FXML
+    private TableColumn<Appointment, String> WeekLocation;
+    @FXML
+    private TableColumn<Appointment, String> WeekStartTime;
+    @FXML 
+    private TableColumn<Appointment, String> WeekEndTime;
+    
     private static Customer updateCustomer;
     private static int updateCustomerId;
     private static String updateCustomerName;
@@ -323,7 +349,8 @@ public class MainController implements Initializable {
 
     public void updateAppointmentTable() {
         AllAptTable.setItems(Appointment.getAllAppointments());  
-        
+        MonthAptTable.setItems(Appointment.getMonthAppointments());
+        WeekAptTable.setItems(Appointment.getWeekAppointments());
       }
     
     
@@ -349,7 +376,18 @@ public class MainController implements Initializable {
         AllLocation.setCellValueFactory(new PropertyValueFactory("location"));
         AllStartTime.setCellValueFactory(new PropertyValueFactory("start"));
         AllEndTime.setCellValueFactory(new PropertyValueFactory("end"));
-          
+        
+        MonthAptID.setCellValueFactory(new PropertyValueFactory("appointmentId"));
+        MonthClientID.setCellValueFactory(new PropertyValueFactory("customerId"));
+        MonthLocation.setCellValueFactory(new PropertyValueFactory("location"));
+        MonthStartTime.setCellValueFactory(new PropertyValueFactory("start"));
+        MonthEndTime.setCellValueFactory(new PropertyValueFactory("end"));
+        
+        WeekAptID.setCellValueFactory(new PropertyValueFactory("appointmentId"));
+        WeekClientID.setCellValueFactory(new PropertyValueFactory("customerId"));
+        WeekLocation.setCellValueFactory(new PropertyValueFactory("location"));
+        WeekStartTime.setCellValueFactory(new PropertyValueFactory("start"));
+        WeekEndTime.setCellValueFactory(new PropertyValueFactory("end"));
     }    
     
 }

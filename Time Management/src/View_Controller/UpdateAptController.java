@@ -224,9 +224,9 @@ public class UpdateAptController implements Initializable {
         
         String dateL = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
         
-        LocalDate localDate = LocalDate.parse(dateL); 
+        //LocalDate localDate = LocalDate.parse(dateL); 
         
-        newaptDate.setValue(localDate);
+        //newaptDate.setValue(localDate);
         newaptDate.setShowWeekNumbers(false);
         
         

@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import static java.time.ZoneOffset.UTC;
@@ -40,6 +41,8 @@ public class Appointment {
     public String start;
     public String end;
     public static ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
+    public static ObservableList<Appointment> monthAppointments = FXCollections.observableArrayList();
+    public static ObservableList<Appointment> weekAppointments = FXCollections.observableArrayList();
     
     public Appointment(int appointmentId, int customerId, int userId, String type, String title, String description, String location, String contact, String url, String start, String end) {
         this.setId(appointmentId);
@@ -186,6 +189,73 @@ public class Appointment {
             return null;
     }
 }
+    public static ObservableList<Appointment> getMonthAppointments(){
+        monthAppointments.clear();
+        LocalDate now = LocalDate.now();
+        LocalDate future = LocalDate.now().plusMonths(1);
+        
+        try {
+            Statement statement = DataBase.conn.createStatement();
+            String query = "SELECT * FROM appointment WHERE start >='" + now + "' AND start <= '" + future + "';";
+            ResultSet rs = statement.executeQuery(query);
+             while(rs.next()){
+                 Appointment newAppointment = new Appointment(
+                 rs.getInt("appointmentId"),
+                 rs.getInt("customerId"),
+                 rs.getInt("userId"),
+                 rs.getString("type"),
+                 rs.getString("title"),
+                 rs.getString("description"),
+                 rs.getString("location"),
+                 rs.getString("contact"),
+                 rs.getString("url"),
+                 rs.getString("start"),
+                 rs.getString("end"));
+                                                         
+                monthAppointments.add(newAppointment);
+             }
+             statement.close();
+             return monthAppointments;
+             
+        }catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return null;
+    }
+}
+        public static ObservableList<Appointment> getWeekAppointments(){
+        weekAppointments.clear();
+        LocalDate now = LocalDate.now();
+        LocalDate future = LocalDate.now().plusWeeks(1);
+        
+        try {
+            Statement statement = DataBase.conn.createStatement();
+            String query = "SELECT * FROM appointment WHERE start >='" + now + "' AND start <= '" + future + "';";
+            ResultSet rs = statement.executeQuery(query);
+             while(rs.next()){
+                 Appointment newAppointment = new Appointment(
+                 rs.getInt("appointmentId"),
+                 rs.getInt("customerId"),
+                 rs.getInt("userId"),
+                 rs.getString("type"),
+                 rs.getString("title"),
+                 rs.getString("description"),
+                 rs.getString("location"),
+                 rs.getString("contact"),
+                 rs.getString("url"),
+                 rs.getString("start"),
+                 rs.getString("end"));
+                                                         
+                weekAppointments.add(newAppointment);
+             }
+             statement.close();
+             return weekAppointments;
+             
+        }catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return null;
+    }
+}
+    
    
         
 //        public String getDateTimeFormat() {
