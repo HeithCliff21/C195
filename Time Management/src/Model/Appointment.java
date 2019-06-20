@@ -354,6 +354,7 @@ public class Appointment {
     
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
+    private static DateTimeFormatter formatterAM = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
     
     // Switches UTC to Location
     public static String getlocationDateTime(String location, String time){
@@ -373,37 +374,66 @@ public class Appointment {
         LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
                            
         String srtS = srtL.toString();
-        String dtime = srtL.format(formatter);
+        String dtime = srtL.format(formatterAM);
         
         return dtime;    
     }
+    
+    
+    
+    public static String getAptLocationDateTime(String location, String time) throws ParseException{
+        
+       // Currently doesn't work with current Format  
+             
+        LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        ZoneId ZoneaptLoc = ZoneId.of(location);
+        ZoneId ZoneLoc = ZoneId.systemDefault();
+        ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
+       
+//        ZonedDateTime srt = time.atZone(UTC);
+//                LocalDateTime.parse(time).atZone(UTC);
+//                LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
+//        ZonedDateTime srtZ = LocalDateTime.atZone(UTC);
+       
+        //Changing to Location Time
+        LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
+                           
+        String srtS = srtL.toString();
+        String dtime = srtL.format(formatterAM);
+        
+        return dtime;    
+    
+    }
+    
+    
+    
     // Pulls Time to Location
     public static String getlocationTime(String location, String Ttime) throws ParseException{
-        String time = getlocationDateTime(location,Ttime);
+        
+        
+        String time = getAptLocationDateTime(location,Ttime);
         String timeS[] =time.split(" ");
         String timeL = timeS[1];
         
-        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
-        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+//        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+//        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         
-        String time12 = date12Format.format(date24Format.parse(timeL));
+//        String time12 = date12Format.format(date24Format.parse(timeL));
        
-        return time12;
+        return timeL;
     }
     //Pulls Date to Location
-    public static String getlocationDate(String location, String Ttime){
-        String date = getlocationDateTime(location,Ttime);
+    public static String getlocationDate(String location, String Ttime) throws ParseException{
+        String date = getAptLocationDateTime(location,Ttime);
         String dateS[] =date.split(" ");
         String dateL = dateS[0]; 
         
-        DateTimeFormatter dateold = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        DateTimeFormatter datenew = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-       
-        String dateO = datenew.format(dateold.parse(dateL));
-        
-        
-        
-        return dateO;
+//        DateTimeFormatter dateold = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        DateTimeFormatter datenew = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//       
+//        String dateO = datenew.format(dateold.parse(dateL));
+              
+        return dateL;
     }
     
     public static String getDateTime(String date, String time, String location) {
