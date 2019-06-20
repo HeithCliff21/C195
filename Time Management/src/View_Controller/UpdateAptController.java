@@ -6,6 +6,7 @@
 package View_Controller;
 
 import Model.Appointment;
+import static Model.Appointment.getDateTime;
 import Model.City;
 import Model.Customer;
 import Model.CustomerTable;
@@ -160,9 +161,10 @@ public class UpdateAptController implements Initializable {
     
     
      @FXML
-    void updateAptSave(ActionEvent event) throws IOException, ParseException {
+    void updateAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
         
         int aptId = appointmentToAppointmentId();
+        int custId = appointmentToCustId();
         String title = updateaptTitle.getText();
         String description = updateaptDescription.getText();
         String location = SetLocationName();
@@ -173,12 +175,27 @@ public class UpdateAptController implements Initializable {
         String end = setAptEnd();
         String date = setAptDate();
         
+        String startDateTime = Appointment.getDateTime(date, start, location);
+        String endDateTime = Appointment.getDateTime(date, end, location);
+        
+        // Line to check if Appointment Time are already taken for user
+        if (Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
+           
+           // Alert alert  // Appointment isn't avialbe due to User has another appointment at that time 
+           }
+        if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, custId) == false){
+           // Appointment isn't avialbe due to customer has another appointment at that time 
+        }
+       
+        
+        
+        
         System.out.println("date: " + setAptDate());
         System.out.println("start: " + setAptStart());
         System.out.println("end: " + setAptEnd());
         System.out.println("location: " + SetLocationName());
         
-        Appointment.updateApt(aptId, title, description, location, date, contact, type, url, start, end);
+        Appointment.updateApt(aptId, title, description, location, contact, type, url, startDateTime, endDateTime);
         
         Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
         Scene scene = new Scene(UpdateCustomer);

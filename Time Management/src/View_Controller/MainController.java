@@ -13,7 +13,12 @@ import Model.Customer;
 import Model.CustomerTable;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -278,6 +283,7 @@ public class MainController implements Initializable {
     @FXML
     void UpdateApt(ActionEvent event) throws IOException {
         Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
+        // might need to add other Tables (week/month)
         updateAptId = appointment.getAppointmentId();
         updateAptCustId = appointment.getCustomerId();
         updateAptTitle = appointment.getTitle();
@@ -353,6 +359,18 @@ public class MainController implements Initializable {
         WeekAptTable.setItems(Appointment.getWeekAppointments());
       }
     
+    public void checkForAppt() throws SQLException{
+	LocalDateTime now = LocalDateTime.now();
+        LocalDateTime future = LocalDateTime.now().plusMinutes(15);
+        
+        String sNow = now.toString();
+        String sFuture = now.toString();
+        
+        if (Appointment.appointmentAvialableUser(sNow,sFuture) == false){
+            //Message for Appointment within 15 min
+        }
+       
+    }
     
     
     @Override
@@ -364,6 +382,11 @@ public class MainController implements Initializable {
         Customer.getAllCustomers();
         updateCustomerTable();
         updateAppointmentTable();
+        try {
+            checkForAppt();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         MainCustomerID.setCellValueFactory(new PropertyValueFactory("customerId"));
         MainCustomerName.setCellValueFactory(new PropertyValueFactory("customerName"));

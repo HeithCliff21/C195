@@ -150,10 +150,12 @@ public class Appointment {
      * @throws java.sql.SQLException
      */
     public static ObservableList<Appointment> getAllAppointments(){
+        User user = User.getCurrentUser();
+        int userId = user.getUserId();
         allAppointments.clear();
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment;";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -193,10 +195,11 @@ public class Appointment {
         monthAppointments.clear();
         LocalDate now = LocalDate.now();
         LocalDate future = LocalDate.now().plusMonths(1);
-        
+        User user = User.getCurrentUser();
+        int userId = user.getUserId();
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE start >='" + now + "' AND start <= '" + future + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + now + "' AND start <= '" + future + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -226,10 +229,12 @@ public class Appointment {
         weekAppointments.clear();
         LocalDate now = LocalDate.now();
         LocalDate future = LocalDate.now().plusWeeks(1);
+        User user = User.getCurrentUser();
+        int userId = user.getUserId();
         
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE start >='" + now + "' AND start <= '" + future + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + now + "' AND start <= '" + future + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -255,9 +260,7 @@ public class Appointment {
             return null;
     }
 }
-    
-   
-        
+
 //        public String getDateTimeFormat() {
 //        
 //            
@@ -394,6 +397,7 @@ public class Appointment {
                 try {
                     String startDateTime = getDateTime(date, start, location);
                     String endDateTime = getDateTime(date, end, location);
+                    //appointmentAvialable(String startDateTime ,String endDateTime);
                     Statement statement = DataBase.conn.createStatement();
                     User user = User.getCurrentUser();
                     String username = user.getUsername();
@@ -411,10 +415,11 @@ public class Appointment {
         }
         return false;
 }
-      public static boolean updateApt(int aptId, String title, String description, String location, String date, String contact, String type, String url, String start, String end) {
+      public static boolean updateApt(int aptId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
         try {
-                    String startDateTime = getDateTime(date, start, location);
-                    String endDateTime = getDateTime(date, end, location);
+//                        Adding step in controller                    
+//String startDateTime = getDateTime(date, start, location);
+//                    String endDateTime = getDateTime(date, end, location);
                     Statement statement = DataBase.conn.createStatement();
                     User user = User.getCurrentUser();
                     String username = user.getUsername();
@@ -431,4 +436,36 @@ public class Appointment {
         }
         return false;
 }
+      
+       public static boolean appointmentAvialableUser(String start, String End) throws SQLException{
+            User user = User.getCurrentUser();
+            int userId = user.getUserId();
+            try {
+            Statement statement = DataBase.conn.createStatement();
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "' AND start >='" + start + "' AND start <= '" + End + "';";
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.getInt("appointmentId") <= 1){
+                return false;
+            }        
+            } catch (SQLException e){
+                System.out.println("SQLExcpection: " + e.getMessage());
+                return true; 
+             }
+            return true;
+       }
+            
+       public static boolean appointmentAvialableCust(String start, String End, int custId) throws SQLException{
+            try {
+            Statement statement = DataBase.conn.createStatement();
+            String query = "SELECT * FROM appointment WHERE customerId = '" + custId + "'AND start >='" + start + "' AND start <= '" + End + "';";
+            ResultSet rs = statement.executeQuery(query);
+            if(rs.getInt("appointmentId") <= 1){
+                return false;
+            }        
+            } catch (SQLException e){
+                System.out.println("SQLExcpection: " + e.getMessage());
+                return true; 
+             }
+            return true;
+            }
 }

@@ -94,6 +94,8 @@ public class UpdateCustomerController implements Initializable {
         int addressId = customertoCustAddressId();
         int customerId = customerToCustomerId();
         
+        
+        
         Customer.updateCustomer(customerId, addressId, Name, Address, Address2, cityId, Zip, Phone);
         
         Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
