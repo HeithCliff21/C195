@@ -55,7 +55,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
+interface something{
+            String getTime(String Location, String Time);
+            
+        } 
 /**
  * FXML Controller class
  *
@@ -275,7 +278,7 @@ public class UpdateAptController implements Initializable {
    
      public void startTime() throws ParseException{
          String time = Appointment.getlocationTime(appointmentToLocation(), appointmentToStart());
-         updateaptStartTime.getSelectionModel().select(time);
+                 updateaptStartTime.getSelectionModel().select(time);
      }
      
      public void endTime() throws ParseException{
@@ -290,6 +293,7 @@ public class UpdateAptController implements Initializable {
         Statement statement = DataBase.conn.createStatement();
         String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
         ResultSet rs = statement.executeQuery(query);
+        rs.next();
         String custname = rs.getString("customerName");
         
         statement.close();

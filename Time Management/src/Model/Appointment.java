@@ -22,7 +22,10 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
+interface UTCTimeConversion{
+   String convertToUTC(String date);
+   String convertFromUTC(String date);
+}
 /**
  *
  * @author admin
@@ -184,6 +187,14 @@ public class Appointment {
                 allAppointments.add(newAppointment);
              }
              statement.close();
+             allAppointments.forEach((appointment)->{
+                 
+                 ZoneId ZoneLoc = ZoneId.systemDefault();
+                 String locZone = ZoneLoc.toString();
+                 
+                 appointment.setStart(Appointment.getlocationDateTime(locZone,appointment.getStart()));
+                 appointment.setEnd(Appointment.getlocationDateTime(locZone,appointment.getEnd()));
+             });
              return allAppointments;
              
         }catch (SQLException e) {
@@ -218,6 +229,14 @@ public class Appointment {
                 monthAppointments.add(newAppointment);
              }
              statement.close();
+             monthAppointments.forEach((appointment)->{
+                 
+                 ZoneId ZoneLoc = ZoneId.systemDefault();
+                 String locZone = ZoneLoc.toString();
+                 
+                 appointment.setStart(Appointment.getlocationDateTime(locZone,appointment.getStart()));
+                 appointment.setEnd(Appointment.getlocationDateTime(locZone,appointment.getEnd()));
+             });
              return monthAppointments;
              
         }catch (SQLException e) {
@@ -253,6 +272,14 @@ public class Appointment {
                 weekAppointments.add(newAppointment);
              }
              statement.close();
+             weekAppointments.forEach((appointment)->{
+                 
+                 ZoneId ZoneLoc = ZoneId.systemDefault();
+                 String locZone = ZoneLoc.toString();
+                 
+                 appointment.setStart(Appointment.getlocationDateTime(locZone,appointment.getStart()));
+                 appointment.setEnd(Appointment.getlocationDateTime(locZone,appointment.getEnd()));
+             });
              return weekAppointments;
              
         }catch (SQLException e) {

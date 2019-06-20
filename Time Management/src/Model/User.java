@@ -38,7 +38,7 @@ public class User {
     public static User getCurrentUser() {
         return currentUser;
 }
-    
+        
   public static Boolean login(String userName, String password) throws SQLException, Exception {
         try {
             
