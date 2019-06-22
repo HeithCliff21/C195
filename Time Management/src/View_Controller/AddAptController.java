@@ -13,6 +13,7 @@ import static View_Controller.MainController.customerToCustomerId;
 import static View_Controller.MainController.customertoCustAddressId;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Optional;
 import static java.util.Optional.empty;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
@@ -31,12 +33,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
@@ -72,6 +77,8 @@ public class AddAptController implements Initializable {
     private Button newAptSave;
     @FXML
     private Button newAptCancel;
+    
+    private String exceptionMessage = new String();
     
     //Using the C Global Consulting Type of Consulting as references for a global consulting agency
     private final ObservableList<String> AppointmentType = FXCollections.observableArrayList("LeaderShip Development" , "Conflict Management", "Organization Change");
@@ -130,7 +137,7 @@ public class AddAptController implements Initializable {
     
     
      @FXML
-    void newAptSave(ActionEvent event) throws IOException, ParseException {
+    void newAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
         
         int customerId = customerToCustomerId();
         String title = newaptTitle.getText();
@@ -143,23 +150,77 @@ public class AddAptController implements Initializable {
         String end = setAptEnd();
         String date = setAptDate();
         
+        String startDateTime = Appointment.getDateTime(date, start, location);
+        String endDateTime = Appointment.getDateTime(date, end, location);
+        
+        // Line to check if Appointment Time are already taken for user
+        if (Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("User has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+          
+           //  Appointment isn't avialbe due to User has another appointment at that time 
+           }
+        if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, customerId) == false){
+           // Appointment isn't avialbe due to customer has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("Client has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+        }
+        
+        try {
+            exceptionMessage = Appointment.isAptValid(type, location, date, start, end, contact, url, title, description, exceptionMessage);
+            if (exceptionMessage.length() > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Customer");
+                alert.setHeaderText("Error");
+                alert.setContentText(exceptionMessage);
+                alert.showAndWait();
+                exceptionMessage = "";
+            } else {        
+                Appointment.addApt(customerId, title, description, location, contact, type, url, startDateTime, endDateTime);
+        
+                Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
+                Scene scene = new Scene(UpdateCustomer);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(scene);
+                window.show();
+            }   
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error Adding Part");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please Check Fields and make sure you fill out each field");
+            alert.showAndWait();
+        }       
         System.out.println("date: " + setAptDate());
         System.out.println("start: " + setAptStart());
         System.out.println("end: " + setAptEnd());
-        System.out.println("location: " + SetLocationName());
-        
-        Appointment.addApt(customerId, title, description, location, date, contact, type, url, start, end);
-        
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        System.out.println("location: " + SetLocationName());     
     }
     
     @FXML
     void newAptCancel(ActionEvent event) throws IOException {
-        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Cancel");
+        alert.setContentText("Are you sure you want to cancel adding a appointment for client" + newaptClientName.getText() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            Parent partsCancel = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Scene scene = new Scene(partsCancel);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } else {
+            System.out.println("Cancel has been clicked.");
+        }
     }
     
      // Factory to create Cell of DatePicker

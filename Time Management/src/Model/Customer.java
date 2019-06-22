@@ -170,30 +170,24 @@ public class Customer{
         
     //}
     
-    /*
+   
     //Client Validation Method
-    public static String isClientValid(String clientName, String clientPhone, String clientAddress, String clientCity, String clientCountry, String clientZip, String errorMessage) {
-        if (clientName == null) {
+    public static String isClientValid(String clientName, int clientPhone, String clientAddress, int clientCity, int clientZip, String errorMessage) {
+        if (clientName.equals("")) {
             errorMessage = errorMessage + ("Name cannot be empty");
         }
-        if (clientPhone == null) {
+        if (clientPhone < 1) {
             errorMessage = errorMessage + ("Phone Number cannot be empty");
         }
-        if (clientAddress == null) {
+        if (clientAddress.equals("")) {
             errorMessage = errorMessage + ("Address cannot be empty");
         }
-        if (clientCity == null) {
+        if (clientCity <= 0) {
             errorMessage = errorMessage + ("City cannot be empty");
-        }
-        if (clientCountry == null) {
-            errorMessage = errorMessage + ("Country cannot be empty");
-        }
-        if (clientZip == null) {
+        }        
+        if (clientZip < 1) {
             errorMessage = errorMessage + ("Zip Code cannot be empty");
         }
         return errorMessage;
-    }
-*/
-    
-    
+    }  
 }

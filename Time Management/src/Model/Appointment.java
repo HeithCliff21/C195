@@ -202,15 +202,24 @@ public class Appointment {
             return null;
     }
 }
-    public static ObservableList<Appointment> getMonthAppointments(){
+    public static ObservableList<Appointment> getMonthAppointments() throws ParseException{
         monthAppointments.clear();
         LocalDate now = LocalDate.now();
         LocalDate future = LocalDate.now().plusMonths(1);
+        
+        String sNow = now.toString();
+        String sFuture = future.toString();
+        
+        String location = "UTC";
+        
+        String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
+        String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
+        
         User user = User.getCurrentUser();
         int userId = user.getUserId();
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + now + "' AND start <= '" + future + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNowU + "' AND start <= '" + sFutureU + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -244,16 +253,25 @@ public class Appointment {
             return null;
     }
 }
-        public static ObservableList<Appointment> getWeekAppointments(){
+        public static ObservableList<Appointment> getWeekAppointments() throws ParseException{
         weekAppointments.clear();
         LocalDate now = LocalDate.now();
         LocalDate future = LocalDate.now().plusWeeks(1);
+        
+        String sNow = now.toString();
+        String sFuture = future.toString();
+        
+        String location = "UTC";
+        
+        String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
+        String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
+        
         User user = User.getCurrentUser();
         int userId = user.getUserId();
         
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + now + "' AND start <= '" + future + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNowU + "' AND start <= '" + sFutureU + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -352,6 +370,8 @@ public class Appointment {
     
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
+    private static final String DATEAM_FORMAT = "MM-dd-yyyy hh:mm a";
+    
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
     private static DateTimeFormatter formatterAM = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
@@ -379,27 +399,39 @@ public class Appointment {
         return dtime;    
     }
     
-    
-    
-    public static String getAptLocationDateTime(String location, String time) throws ParseException{
+    public static String getUTCLocationDateTime(String location, String time) throws ParseException{
         
-       // Currently doesn't work with current Format  
-             
+          
         LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));
         ZoneId ZoneaptLoc = ZoneId.of(location);
         ZoneId ZoneLoc = ZoneId.systemDefault();
         ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
        
-//        ZonedDateTime srt = time.atZone(UTC);
-//                LocalDateTime.parse(time).atZone(UTC);
-//                LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
-//        ZonedDateTime srtZ = LocalDateTime.atZone(UTC);
-       
+     
         //Changing to Location Time
         LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
                            
         String srtS = srtL.toString();
-        String dtime = srtL.format(formatterAM);
+        String dtime = srtL.format(formatter);
+        
+        return dtime;    
+    
+    }
+    
+    public static String getAptLocationDateTime(String location, String time) throws ParseException{
+        
+          
+        LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATEAM_FORMAT));
+        ZoneId ZoneaptLoc = ZoneId.of(location);
+        ZoneId ZoneLoc = ZoneId.systemDefault();
+        ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
+       
+     
+        //Changing to Location Time
+        LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
+                           
+        String srtS = srtL.toString();
+        String dtime = srtL.format(formatter);
         
         return dtime;    
     
@@ -415,12 +447,12 @@ public class Appointment {
         String timeS[] =time.split(" ");
         String timeL = timeS[1];
         
-//        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
-//        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         
-//        String time12 = date12Format.format(date24Format.parse(timeL));
+        String time12 = date12Format.format(date24Format.parse(timeL));
        
-        return timeL;
+        return time12;
     }
     //Pulls Date to Location
     public static String getlocationDate(String location, String Ttime) throws ParseException{
@@ -428,12 +460,12 @@ public class Appointment {
         String dateS[] =date.split(" ");
         String dateL = dateS[0]; 
         
-//        DateTimeFormatter dateold = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        DateTimeFormatter datenew = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//       
-//        String dateO = datenew.format(dateold.parse(dateL));
+        DateTimeFormatter dateold = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter datenew = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+       
+        String dateO = datenew.format(dateold.parse(dateL));
               
-        return dateL;
+        return dateO;
     }
     
     public static String getDateTime(String date, String time, String location) {
@@ -450,10 +482,10 @@ public class Appointment {
         return AptUtc;      
 }
     
-     public static boolean addApt(int customerId, String title, String description, String location, String date, String contact, String type, String url, String start, String end) {
+     public static boolean addApt(int customerId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
                 try {
-                    String startDateTime = getDateTime(date, start, location);
-                    String endDateTime = getDateTime(date, end, location);
+//                    String startDateTime = getDateTime(date, start, location);
+//                    String endDateTime = getDateTime(date, end, location);
                     //appointmentAvialable(String startDateTime ,String endDateTime);
                     Statement statement = DataBase.conn.createStatement();
                     User user = User.getCurrentUser();
@@ -494,6 +526,24 @@ public class Appointment {
         return false;
 }
       
+      // Delete Customer from Database
+    public static boolean deleteapt (int aptId) {
+        try {
+            Statement statement = DataBase.conn.createStatement();
+            String queryOne = "DELETE FROM appointment WHERE appointmentId=" + aptId;
+            int updateOne = statement.executeUpdate(queryOne);
+            if(updateOne == 1) {
+                    return true;
+                }
+        } catch(SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+        }
+        return false;
+    }
+      
+      
+      
+      
        public static boolean appointmentAvialableUser(String start, String End) throws SQLException{
             User user = User.getCurrentUser();
             int userId = user.getUserId();
@@ -501,7 +551,8 @@ public class Appointment {
             Statement statement = DataBase.conn.createStatement();
             String query = "SELECT * FROM appointment WHERE userId = '" + userId + "' AND start >='" + start + "' AND start <= '" + End + "';";
             ResultSet rs = statement.executeQuery(query);
-            if(rs.getInt("appointmentId") <= 1){
+            rs.next();
+            if(rs.getInt("appointmentId") >= 1){
                 return false;
             }        
             } catch (SQLException e){
@@ -516,7 +567,8 @@ public class Appointment {
             Statement statement = DataBase.conn.createStatement();
             String query = "SELECT * FROM appointment WHERE customerId = '" + custId + "'AND start >='" + start + "' AND start <= '" + End + "';";
             ResultSet rs = statement.executeQuery(query);
-            if(rs.getInt("appointmentId") <= 1){
+            rs.next();
+            if(rs.getInt("appointmentId") >= 1){
                 return false;
             }        
             } catch (SQLException e){
@@ -525,4 +577,36 @@ public class Appointment {
              }
             return true;
             }
+       
+       //Appointment Validation Method
+    public static String isAptValid(String aptType, String location, String date, String sTime, String eTime, String contact, String url, String Title, String Description, String errorMessage) {
+        if (aptType.equals("")) {
+            errorMessage = errorMessage + ("Appointment Type cannot be empty");
+        }
+        if (location.equals("")) {
+            errorMessage = errorMessage + ("Location cannot be blank");
+        }
+        if (date.equals("")) {
+            errorMessage = errorMessage + ("Date cannot be empty");
+        }
+        if (sTime.equals("")) {
+            errorMessage = errorMessage + ("Start Time cannot be empty");
+        }
+        if (eTime.equals("")) {
+            errorMessage = errorMessage + ("End cannot be empty");
+        }
+        if (contact.equals("")) {
+            errorMessage = errorMessage + ("Contact cannot be blank");
+        }
+        if (url.equals("")) {
+            errorMessage = errorMessage + ("Url cannot be blank");
+        }
+        if (Title.equals("")) {
+            errorMessage = errorMessage + ("Title cannot be blank");
+        }
+        if (Description.equals("")) {
+            errorMessage = errorMessage + ("Description cannot be empty");
+        }       
+        return errorMessage;
+    }  
 }

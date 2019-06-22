@@ -17,6 +17,7 @@ import static View_Controller.MainController.customerToCustomerId;
 import static View_Controller.MainController.customertoCustAddressId;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +28,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -65,6 +69,8 @@ public class UpdateCustomerController implements Initializable {
     
     @FXML
     private Button UpdateCustomerCancel;
+    
+    private String exceptionMessage = new String();
       
     @FXML
     public void SetCountry(ActionEvent event) {
@@ -94,20 +100,50 @@ public class UpdateCustomerController implements Initializable {
         int addressId = customertoCustAddressId();
         int customerId = customerToCustomerId();
         
-        
-        
-        Customer.updateCustomer(customerId, addressId, Name, Address, Address2, cityId, Zip, Phone);
-        
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        try {
+            exceptionMessage = Customer.isClientValid(Name, Integer.parseInt(Phone) ,Address,cityId, Integer.parseInt(Zip), exceptionMessage);
+            if (exceptionMessage.length() > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Customer");
+                alert.setHeaderText("Error");
+                alert.setContentText(exceptionMessage);
+                alert.showAndWait();
+                exceptionMessage = "";
+            } else {        
+                Customer.updateCustomer(customerId, addressId, Name, Address, Address2, cityId, Zip, Phone);
+                Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
+                Scene scene = new Scene(UpdateCustomer);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(scene);
+                window.show();
+            }   
+        } catch (NumberFormatException e) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Error Adding Part");
+        alert.setHeaderText("Error");
+        alert.setContentText("Please Check Fields and Make sure to Only have Numbers in Phone Number and Zip Code");
+        alert.showAndWait();
+        }
     }
-    
-    @FXML
-    void UpdateCustomerCancel(ActionEvent event){
         
+    @FXML
+    void UpdateCustomerCancel(ActionEvent event) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Cancel");
+        alert.setHeaderText("Cancel Modifying Part");
+        alert.setContentText("Are you sure you want to cancel Client update for " + UpdateCustomerName.getText() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            System.out.println("Part add has been cancelled.");
+            Parent partsCancel = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Scene scene = new Scene(partsCancel);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } else {
+            System.out.println("You clicked cancel. Please complete part info.");
+        }
     }
     
 

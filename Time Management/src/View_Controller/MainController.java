@@ -7,15 +7,22 @@ package View_Controller;
 
 import Model.Address;
 import Model.Appointment;
+import static Model.Appointment.weekAppointments;
 import Model.City;
 import Model.Country;
 import Model.Customer;
 import Model.CustomerTable;
+import Model.DataBase;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,10 +33,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.SelectionModel;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -217,6 +227,7 @@ public class MainController implements Initializable {
     @FXML
     void UpdateCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
+              
         updateCustomerId = customer.getCustomerId();
         updateCustomerName = customer.getCustomerName();
         updateCustomerPhone = customer.getPhone();
@@ -231,8 +242,7 @@ public class MainController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
-        
-        
+               
     }
     
     
@@ -240,20 +250,20 @@ public class MainController implements Initializable {
     @FXML
     void DeleteCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
-        updateCustomerId = customer.getCustomerId();
-        updateCustomerName = customer.getCustomerName();
-        updateCustomerPhone = customer.getPhone();
-        updateCustomerAddress = customer.getAddress();
-        updateCustomerAddress2 = customer.getAddress2();
-        updateCustomerCityId = customer.getCityId();
-        updateCustomerZip = customer.getPostalCode();
-        updateCustomerAddressId = customer.getAddId();
         
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("DeleteCustomer.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText("Confirm?");
+        alert.setContentText("Are you sure you want to client " + customer.getCustomerName() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Customer.deleteCustomer(customer.getCustomerId(), customer.getAddId());            
+            updateCustomerTable();
+            System.out.println("Client " + customer.getCustomerName() + " was removed.");
+        } else {
+            System.out.println("Client " + customer.getCustomerName() + " was not removed.");
+        } 
     }
     
        @FXML
@@ -317,11 +327,43 @@ public class MainController implements Initializable {
     }
     
        @FXML
-    void DeleteApt(ActionEvent event) throws IOException {
+    void DeleteApt(ActionEvent event) throws IOException, ParseException {
+        Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
+        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirm Delete");
+        alert.setHeaderText("Confirm?");
+        alert.setContentText("Are you sure you want to delete apt for client " + customerName(appointment.getAppointmentId()) + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            Appointment.deleteapt(appointment.getAppointmentId());  
+            updateAppointmentTable();
+            System.out.println("Appointment for client " + customerName(appointment.getAppointmentId()) + " was removed.");
+        } else {
+            System.out.println("Appointment for client " + customerName(appointment.getAppointmentId()) + " was not removed.");
+        } 
     }
     
        @FXML
     void MainExit(ActionEvent event) throws IOException {
+    }
+    
+    public String customerName(int custID){
+         //Customer.getAllCustomers();
+        try {
+        Statement statement = DataBase.conn.createStatement();
+        String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
+        ResultSet rs = statement.executeQuery(query);
+        rs.next();
+        String custname = rs.getString("customerName");
+        
+        statement.close();
+        return custname;
+     }catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            return null;
+        }
     }
 
     
@@ -349,25 +391,37 @@ public class MainController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    public void updateCustomerTable() {
-        MainCustomersTable.setItems(CustomerTable.getCustomersTable());   
+
+    public void updateCustomerTable(){
+        MainCustomersTable.setItems(CustomerTable.getCustomersTable());
     }
 
-    public void updateAppointmentTable() {
+    public void updateAppointmentTable() throws ParseException {
         AllAptTable.setItems(Appointment.getAllAppointments());  
         MonthAptTable.setItems(Appointment.getMonthAppointments());
         WeekAptTable.setItems(Appointment.getWeekAppointments());
       }
     
-    public void checkForAppt() throws SQLException{
+    public void checkForAppt() throws SQLException, ParseException{
 	LocalDateTime now = LocalDateTime.now();
         LocalDateTime future = LocalDateTime.now().plusMinutes(15);
         
         String sNow = now.toString();
-        String sFuture = now.toString();
+        String sFuture = future.toString();
         
-        if (Appointment.appointmentAvialableUser(sNow,sFuture) == false){
+        //Possible lambda
+        String location = "UTC";
+        
+        String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
+        String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
+                       
+        if (Appointment.appointmentAvialableUser(sNowU,sFutureU) == false){
             //Message for Appointment within 15 min
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Appointment");
+            alert.setHeaderText("Pending Appointment");
+            alert.setContentText("You have an Appointment with 15 min");
+            alert.showAndWait();
         }
        
     }
@@ -381,10 +435,16 @@ public class MainController implements Initializable {
         Country.getAllCountries();
         Customer.getAllCustomers();
         updateCustomerTable();
-        updateAppointmentTable();
+        try {
+            updateAppointmentTable();
+        } catch (ParseException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             checkForAppt();
         } catch (SQLException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
         

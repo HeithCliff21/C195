@@ -35,6 +35,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,12 +48,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 interface something{
@@ -89,6 +93,8 @@ public class UpdateAptController implements Initializable {
     private Button updateAptSave;
     @FXML
     private Button updateAptCancel;
+    
+    private String exceptionMessage = new String();
     
     //Using the C Global Consulting Type of Consulting as references for a global consulting agency
     private final ObservableList<String> AppointmentType = FXCollections.observableArrayList("LeaderShip Development" , "Conflict Management", "Organization Change");
@@ -183,33 +189,74 @@ public class UpdateAptController implements Initializable {
         
         // Line to check if Appointment Time are already taken for user
         if (Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
-           
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("User has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+          
            // Alert alert  // Appointment isn't avialbe due to User has another appointment at that time 
            }
         if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, custId) == false){
            // Appointment isn't avialbe due to customer has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("Client has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
         }
-       
         
+        try {
+            exceptionMessage = Appointment.isAptValid(type, location, date, start, end, contact, url, title, description, exceptionMessage);
+            if (exceptionMessage.length() > 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Customer");
+                alert.setHeaderText("Error");
+                alert.setContentText(exceptionMessage);
+                alert.showAndWait();
+                exceptionMessage = "";
+            } else {        
+                Appointment.updateApt(aptId, title, description, location, contact, type, url, startDateTime, endDateTime);
         
-        
+                Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
+                Scene scene = new Scene(UpdateCustomer);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(scene);
+                window.show();
+            }   
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Error Adding Part");
+            alert.setHeaderText("Error");
+            alert.setContentText("Please Check Fields and make sure you fill out each field");
+            alert.showAndWait();
+        }       
+           
         System.out.println("date: " + setAptDate());
         System.out.println("start: " + setAptStart());
         System.out.println("end: " + setAptEnd());
         System.out.println("location: " + SetLocationName());
-        
-        Appointment.updateApt(aptId, title, description, location, contact, type, url, startDateTime, endDateTime);
-        
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
+              
     }
     
     @FXML
     void updateAptCancel(ActionEvent event) throws IOException {
-        
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Cancel");
+        alert.setContentText("Are you sure you want to cancel adding a appointment for client" + updateaptClientName.getText() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            Parent partsCancel = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Scene scene = new Scene(partsCancel);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } else {
+            System.out.println("Cancel has been clicked.");
+        }
     }
     
      // Factory to create Cell of DatePicker
@@ -238,44 +285,23 @@ public class UpdateAptController implements Initializable {
         return dayCellFactory;
     }
     
+    public static final LocalDate setDate2(String dateString){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate localDate = LocalDate.parse(dateString, formatter);
+        return localDate;
+}
+    
     @FXML
      public void SetDate() throws ParseException {
-        DatePicker newaptDate = new DatePicker();
-        
-        String dateL = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
-        
-        //LocalDate localDate = LocalDate.parse(dateL); 
-        
-        //newaptDate.setValue(localDate);
-        newaptDate.setShowWeekNumbers(false);
-        
-        
-        //updateaptDate.getSelectionModel().select(dateL);
-        //getDayCellFactory();
-     
-        // Converter
-//        StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
-//        DateTimeFormatter dateFormatter =
-//                      DateTimeFormatter.ofPattern("YYYY-MM-DD");
-//
-//            @Override
-//            public String toString(LocalDate object) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public LocalDate fromString(String string) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }         
-//        };
-     }
-    
-//    public static LocalDate LOCAL_DATE (String dateString){
-//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//    LocalDate localDate = LocalDate.parse(dateString, formatter);
-//    return localDate;
-//}
    
+        String dateL = Appointment.getlocationDate(appointmentToLocation(), appointmentToStart());
+        DatePicker newaptDate = new DatePicker();
+        newaptDate.setValue(setDate2(dateL));
+        
+        updateaptDate.setValue(setDate2(dateL));
+        newaptDate.setShowWeekNumbers(false);
+     }
+     
      public void startTime() throws ParseException{
          String time = Appointment.getlocationTime(appointmentToLocation(), appointmentToStart());
                  updateaptStartTime.getSelectionModel().select(time);
@@ -322,7 +348,7 @@ public class UpdateAptController implements Initializable {
         updateaptType.setItems(AppointmentType);
         updateaptLocation.getItems().addAll(City.allCities);
         updateaptStartTime.setItems(AptStartTime);
-        updateaptEndTime.setItems(AptEndTime);
+        updateaptEndTime.setItems(AptEndTime);       
         try {
             startTime();
         } catch (ParseException ex) {
@@ -341,8 +367,7 @@ public class UpdateAptController implements Initializable {
         updateaptType.getSelectionModel().select(appointmentToType());
         updateaptLocation.getSelectionModel().select(LocationSet());
    
-        try {
-            // Disable Monday, Tueday, Wednesday.
+        try {            
             SetDate();
         } catch (ParseException ex) {
             Logger.getLogger(UpdateAptController.class.getName()).log(Level.SEVERE, null, ex);

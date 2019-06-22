@@ -9,6 +9,7 @@ import Model.City;
 import Model.Customer;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,8 +22,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -60,6 +63,8 @@ public class AddCustomerController implements Initializable{
     
     @FXML
     private Button AddCustomerCancel;
+    
+    private String exceptionMessage = new String();
       
     @FXML
     public void SetCountry(ActionEvent event) {
@@ -76,11 +81,7 @@ public class AddCustomerController implements Initializable{
             AddCustomerCountry.setText("United States");       
         }
      }
-    @FXML
-    void AddCustomerCancel(ActionEvent event){
-        
-    }
-    
+     
     @FXML
     void AddCustomerSave(ActionEvent event) throws IOException {
         // Retrieves Values from text boxes
@@ -91,43 +92,54 @@ public class AddCustomerController implements Initializable{
         String Zip = AddCustomerZipCode.getText();
         int cityId = City.getSelectedId();
         
-        Customer.saveCustomer(Name, Address, Address2, cityId, Zip, Phone);
-        
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
-    }
-        /*
         try {
-            exceptionMessage = Customer.isClientValid(clientName,clientPhone,clientAddress,clientCity,clientCountry,clientZip, exceptionMessage);
+            exceptionMessage = Customer.isClientValid(Name, Integer.parseInt(Phone) ,Address,cityId, Integer.parseInt(Zip), exceptionMessage);
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Error Adding Part");
+                alert.setTitle("Error Adding Customer");
                 alert.setHeaderText("Error");
                 alert.setContentText(exceptionMessage);
                 alert.showAndWait();
                 exceptionMessage = "";
-            } else {
-                    Customer.setName(partName);
-                    iPart.setPrice(Double.parseDouble(partPrice));
-                    iPart.setInStock(Integer.parseInt(partInv));
-                    iPart.setMin(Integer.parseInt(partMin));
-                    iPart.setMax(Integer.parseInt(partMax));
-                    iPart.setMachineID(Integer.parseInt(partDyn));
-                    Inventory.addPart(iPart);
-                    
-                    // Increment our part id
-                    Inventory.setPartID(Inventory.getPartID() + 1);
-        
-        if(!checkName(clientName)|!checkPhone(clientPhone)|!checkAddress(clientAddress)|!checkCity(clientCity)|!checkCountry(clientCountry)|!checkZip(clientZip)){
-            return false;
-        }else{
-            return Customer.saveClient(clientName, clientAddress, clientCity, clientZip, clientPhone);
+            } else {        
+                Customer.saveCustomer(Name, Address, Address2, cityId, Zip, Phone);
+                Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
+                Scene scene = new Scene(UpdateCustomer);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(scene);
+                window.show();
+            }   
+        } catch (NumberFormatException e) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Error Adding Part");
+        alert.setHeaderText("Error");
+        alert.setContentText("Please Check Fields and Make sure to Only have Numbers in Phone Number and Zip Code");
+        alert.showAndWait();
         }
     }
     
+    @FXML
+    void AddCustomerCancel(ActionEvent event) throws IOException {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Cancel");
+        alert.setContentText("Are you sure you want to cancel adding Client" + AddCustomerName.getText() + "?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.get() == ButtonType.OK) {
+            Parent partsCancel = FXMLLoader.load(getClass().getResource("Main.fxml"));
+            Scene scene = new Scene(partsCancel);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        } else {
+            System.out.println("Cancel has been clicked.");
+        }
+    }
+ 
+  
     /**
      * Initializes the controller class.
      */
