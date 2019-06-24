@@ -139,6 +139,8 @@ public class AddAptController implements Initializable {
      @FXML
     void newAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
         
+        //Drop Down Select need to have a validation before trying to be set- Currently Breaking
+        
         int customerId = customerToCustomerId();
         String title = newaptTitle.getText();
         String description = newaptDescription.getText();
@@ -150,28 +152,17 @@ public class AddAptController implements Initializable {
         String end = setAptEnd();
         String date = setAptDate();
         
-        String startDateTime = Appointment.getDateTime(date, start, location);
-        String endDateTime = Appointment.getDateTime(date, end, location);
-        
-        // Line to check if Appointment Time are already taken for user
-        if (Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Overlapping Appointment");
-                alert.setHeaderText("User has another Appointment at this Time");
-                alert.setContentText("Please select another time");
-                alert.showAndWait();
-          
-           //  Appointment isn't avialbe due to User has another appointment at that time 
-           }
-        if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, customerId) == false){
-           // Appointment isn't avialbe due to customer has another appointment at that time 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Overlapping Appointment");
-                alert.setHeaderText("Client has another Appointment at this Time");
-                alert.setContentText("Please select another time");
-                alert.showAndWait();
+        if(start.equals("")|end.equals("")|date.equals("")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Apt Date");
+                alert.setHeaderText("Need Appointment Date and Time");
+                alert.setContentText("Please Selected Date and Time for Appointment");
+                alert.showAndWait();              
         }
         
+        String startDateTime = Appointment.getDateTime(date, start, location);
+        String endDateTime = Appointment.getDateTime(date, end, location);
+               
         try {
             exceptionMessage = Appointment.isAptValid(type, location, date, start, end, contact, url, title, description, exceptionMessage);
             if (exceptionMessage.length() > 0) {
@@ -181,7 +172,21 @@ public class AddAptController implements Initializable {
                 alert.setContentText(exceptionMessage);
                 alert.showAndWait();
                 exceptionMessage = "";
-            } else {        
+            } else if(Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
+            // Appointment isn't avialbe due to User has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("User has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+            }else if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, customerId) == false){
+           // Appointment isn't avialbe due to customer has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("Client has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+            }else {        
                 Appointment.addApt(customerId, title, description, location, contact, type, url, startDateTime, endDateTime);
         
                 Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));

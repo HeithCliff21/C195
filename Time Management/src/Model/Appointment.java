@@ -209,17 +209,13 @@ public class Appointment {
         
         String sNow = now.toString();
         String sFuture = future.toString();
-        
-        String location = "UTC";
-        
-        String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
-        String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
+              
         
         User user = User.getCurrentUser();
         int userId = user.getUserId();
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNowU + "' AND start <= '" + sFutureU + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNow + "' AND start <= '" + sFuture + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -260,18 +256,13 @@ public class Appointment {
         
         String sNow = now.toString();
         String sFuture = future.toString();
-        
-        String location = "UTC";
-        
-        String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
-        String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
-        
+               
         User user = User.getCurrentUser();
         int userId = user.getUserId();
         
         try {
             Statement statement = DataBase.conn.createStatement();
-            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNowU + "' AND start <= '" + sFutureU + "';";
+            String query = "SELECT * FROM appointment WHERE userId = '" + userId + "'AND start >='" + sNow + "' AND start <= '" + sFuture + "';";
             ResultSet rs = statement.executeQuery(query);
              while(rs.next()){
                  Appointment newAppointment = new Appointment(
@@ -401,8 +392,10 @@ public class Appointment {
     
     public static String getUTCLocationDateTime(String location, String time) throws ParseException{
         
-          
-        LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        String time2 = time.replaceAll("\\.0*$", "");
+        
+    
+        LocalDateTime ldt = LocalDateTime.parse(time2, DateTimeFormatter.ofPattern(DATE_FORMAT));
         ZoneId ZoneaptLoc = ZoneId.of(location);
         ZoneId ZoneLoc = ZoneId.systemDefault();
         ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
@@ -579,7 +572,7 @@ public class Appointment {
             }
        
        //Appointment Validation Method
-    public static String isAptValid(String aptType, String location, String date, String sTime, String eTime, String contact, String url, String Title, String Description, String errorMessage) {
+    public static String isAptValid(String aptType, String location, String date, String sTime, String eTime, String contact, String url, String title, String description, String errorMessage) {
         if (aptType.equals("")) {
             errorMessage = errorMessage + ("Appointment Type cannot be empty");
         }
@@ -601,10 +594,10 @@ public class Appointment {
         if (url.equals("")) {
             errorMessage = errorMessage + ("Url cannot be blank");
         }
-        if (Title.equals("")) {
+        if (title.equals("")) {
             errorMessage = errorMessage + ("Title cannot be blank");
         }
-        if (Description.equals("")) {
+        if (description.equals("")) {
             errorMessage = errorMessage + ("Description cannot be empty");
         }       
         return errorMessage;

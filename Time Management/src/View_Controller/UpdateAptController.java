@@ -21,6 +21,7 @@ import static View_Controller.MainController.appointmentToContact;
 import static View_Controller.MainController.appointmentToUrl;
 import static View_Controller.MainController.appointmentToTitle;
 import static View_Controller.MainController.appointmentToDescription;
+import static com.sun.media.jfxmediaimpl.MediaUtils.error;
 //import static View_Controller.MainController.appointmentToCustName;
 import java.io.IOException;
 import java.net.URL;
@@ -59,6 +60,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import static sun.management.Agent.error;
 interface something{
             String getTime(String Location, String Time);
             
@@ -95,6 +97,7 @@ public class UpdateAptController implements Initializable {
     private Button updateAptCancel;
     
     private String exceptionMessage = new String();
+    
     
     //Using the C Global Consulting Type of Consulting as references for a global consulting agency
     private final ObservableList<String> AppointmentType = FXCollections.observableArrayList("LeaderShip Development" , "Conflict Management", "Organization Change");
@@ -184,27 +187,18 @@ public class UpdateAptController implements Initializable {
         String end = setAptEnd();
         String date = setAptDate();
         
+        
+        if(start.equals("")|end.equals("")|date.equals("")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Apt Date");
+                alert.setHeaderText("Need Appointment Date and Time");
+                alert.setContentText("Please Selected Date and Time for Appointment");
+                alert.showAndWait();              
+        }
+        
         String startDateTime = Appointment.getDateTime(date, start, location);
         String endDateTime = Appointment.getDateTime(date, end, location);
         
-        // Line to check if Appointment Time are already taken for user
-        if (Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Overlapping Appointment");
-                alert.setHeaderText("User has another Appointment at this Time");
-                alert.setContentText("Please select another time");
-                alert.showAndWait();
-          
-           // Alert alert  // Appointment isn't avialbe due to User has another appointment at that time 
-           }
-        if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, custId) == false){
-           // Appointment isn't avialbe due to customer has another appointment at that time 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Overlapping Appointment");
-                alert.setHeaderText("Client has another Appointment at this Time");
-                alert.setContentText("Please select another time");
-                alert.showAndWait();
-        }
         
         try {
             exceptionMessage = Appointment.isAptValid(type, location, date, start, end, contact, url, title, description, exceptionMessage);
@@ -215,7 +209,21 @@ public class UpdateAptController implements Initializable {
                 alert.setContentText(exceptionMessage);
                 alert.showAndWait();
                 exceptionMessage = "";
-            } else {        
+            } else if(Appointment.appointmentAvialableUser(startDateTime, endDateTime) == false){
+            // Appointment isn't avialbe due to User has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("User has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+            }else if (Appointment.appointmentAvialableCust(startDateTime, endDateTime, custId) == false){
+           // Appointment isn't avialbe due to customer has another appointment at that time 
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Overlapping Appointment");
+                alert.setHeaderText("Client has another Appointment at this Time");
+                alert.setContentText("Please select another time");
+                alert.showAndWait();
+            }else {        
                 Appointment.updateApt(aptId, title, description, location, contact, type, url, startDateTime, endDateTime);
         
                 Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("Main.fxml"));
@@ -341,7 +349,7 @@ public class UpdateAptController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) {                  
         //customerName();
         //updateaptType.getSelectionModel().select(appointmentToType());
         //updateaptLocation.getSelectionModel().select(appointmentToLocation());

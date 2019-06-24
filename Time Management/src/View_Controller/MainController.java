@@ -227,7 +227,7 @@ public class MainController implements Initializable {
     @FXML
     void UpdateCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
-              
+                     
         updateCustomerId = customer.getCustomerId();
         updateCustomerName = customer.getCustomerName();
         updateCustomerPhone = customer.getPhone();
@@ -266,14 +266,32 @@ public class MainController implements Initializable {
         } 
     }
     
+     @FXML
+    void Reports (ActionEvent event) throws IOException {             
+        Parent Report = FXMLLoader.load(getClass().getResource("Report.fxml"));
+        Scene scene = new Scene(Report);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(scene);
+        window.show();
+    }
+    
+    
        @FXML
     void AddApt(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
         updateCustomerId = customer.getCustomerId();
         updateCustomerName = customer.getCustomerName();
         
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("AddApt.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
+         if(updateCustomerName.equals("")){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Adding Apt");
+                alert.setHeaderText("Please select a client");
+                alert.setContentText("Please selected a client to add a appointment");
+                alert.showAndWait();              
+        }
+        
+        Parent AddApt = FXMLLoader.load(getClass().getResource("AddApt.fxml"));
+        Scene scene = new Scene(AddApt);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
@@ -313,14 +331,9 @@ public class MainController implements Initializable {
                  
 //        updateAptDate = appointment.getDate();
         
-        
-        
-        
-        
-        
-        
-        Parent UpdateCustomer = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
-        Scene scene = new Scene(UpdateCustomer);
+
+        Parent UpdateApt = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
+        Scene scene = new Scene(UpdateApt);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
@@ -334,14 +347,14 @@ public class MainController implements Initializable {
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirm Delete");
         alert.setHeaderText("Confirm?");
-        alert.setContentText("Are you sure you want to delete apt for client " + customerName(appointment.getAppointmentId()) + "?");
+        alert.setContentText("Are you sure you want to delete apt for client " + customerName(appointment.getCustomerId()) + "?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             Appointment.deleteapt(appointment.getAppointmentId());  
             updateAppointmentTable();
-            System.out.println("Appointment for client " + customerName(appointment.getAppointmentId()) + " was removed.");
+            System.out.println("Appointment for client " + customerName(appointment.getCustomerId()) + " was removed.");
         } else {
-            System.out.println("Appointment for client " + customerName(appointment.getAppointmentId()) + " was not removed.");
+            System.out.println("Appointment for client " + customerName(appointment.getCustomerId()) + " was not removed.");
         } 
     }
     
@@ -402,12 +415,16 @@ public class MainController implements Initializable {
         WeekAptTable.setItems(Appointment.getWeekAppointments());
       }
     
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    
     public void checkForAppt() throws SQLException, ParseException{
 	LocalDateTime now = LocalDateTime.now();
         LocalDateTime future = LocalDateTime.now().plusMinutes(15);
         
-        String sNow = now.toString();
-        String sFuture = future.toString();
+        
+        
+        String sNow = now.format(formatter);
+        String sFuture = future.format(formatter);
         
         //Possible lambda
         String location = "UTC";

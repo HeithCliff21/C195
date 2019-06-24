@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import Model.DataBase;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
  
 /**
@@ -42,6 +44,12 @@ public class User {
   public static Boolean login(String userName, String password) throws SQLException, Exception {
         try {
             
+            LocalDateTime now = LocalDateTime.now();
+            ZoneId ZoneLoc = ZoneId.systemDefault();
+            
+            String dateTime = now.toString();
+            String location = ZoneLoc.toString();
+            
             Statement statement = DataBase.getConnection().createStatement();                   
             String sqlLogin = "SELECT * FROM user WHERE userName='" + userName + "' AND password='" + password + "'";
             ResultSet loginAttempt = statement.executeQuery(sqlLogin);
@@ -50,16 +58,16 @@ public class User {
                 currentUser.setUsername(loginAttempt.getString("userName"));
                 currentUser.setUserId(loginAttempt.getInt("userId"));
                 statement.close();
-                //Logger.log(username, true);
+                Login.log(userName, location, dateTime, true);
                 return true;
             } else {
-                //Logger.log(username, false);
+                Login.log(userName, location, dateTime, false);
                 return false;
             }
         } catch(SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             return false;
     
-}
+}  
 }
 }
