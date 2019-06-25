@@ -163,8 +163,13 @@ public class UpdateAptController implements Initializable {
     }
     
     public String setAptDate(){
-        String Date = updateaptDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return Date;
+        LocalDate Date = updateaptDate.getValue();
+        if (Date != null){
+            String Date2 = Date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return Date2;
+        } else{
+            return "";
+        }
     }
      
      @FXML
@@ -172,18 +177,16 @@ public class UpdateAptController implements Initializable {
         
         int aptId = appointmentToAppointmentId();
         int custId = appointmentToCustId();
-        String title = updateaptTitle.getText();
-        String description = updateaptDescription.getText();
+        String title = (updateaptTitle.getText()!= null) ? updateaptTitle.getText() : "";
+        String description = (updateaptDescription.getText()!= null) ? updateaptDescription.getText() : "";
         String location = SetLocationName();
-        String contact = updateaptContact.getText();
+        String contact = (updateaptContact.getText()!= null) ? updateaptContact.getText() : "";
         String type = setAptType();
-        String url = updateaptUrl.getText();
+        String url = (updateaptUrl.getText()!= null) ? updateaptUrl.getText() : "";
         String start = setAptStart();
         String end = setAptEnd();
         String date = setAptDate();
-        
-        
-        
+                
         //Need to Figure out Error if no drop down is selected
         if(start.equals("")|end.equals("")|date.equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -191,7 +194,7 @@ public class UpdateAptController implements Initializable {
                 alert.setHeaderText("Need Appointment Date and Time");
                 alert.setContentText("Please Selected Date and Time for Appointment");
                 alert.showAndWait();              
-        }
+        }else {
         
         String startDateTime = Appointment.getDateTime(date, start, location);
         String endDateTime = Appointment.getDateTime(date, end, location);
@@ -236,7 +239,7 @@ public class UpdateAptController implements Initializable {
             alert.setContentText("Please Check Fields and make sure you fill out each field");
             alert.showAndWait();
         }               
-    }
+    }}
     
     @FXML
     void updateAptCancel(ActionEvent event) throws IOException {
@@ -244,7 +247,7 @@ public class UpdateAptController implements Initializable {
         alert.initModality(Modality.NONE);
         alert.setTitle("Confirmation");
         alert.setHeaderText("Cancel");
-        alert.setContentText("Are you sure you want to cancel adding a appointment for client" + updateaptClientName.getText() + "?");
+        alert.setContentText("Are you sure you want to cancel adding a appointment for client " + updateaptClientName.getText() + "?");
         Optional<ButtonType> result = alert.showAndWait();
 
         if (result.get() == ButtonType.OK) {

@@ -12,7 +12,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
+<AnchorPane id="AnchorPane" prefHeight="554.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.UpdateAptController">
      <children>
       <Label layoutX="16.0" layoutY="14.0" prefHeight="27.0" prefWidth="193.0" text="Update Appointment">
          <font>
@@ -67,7 +67,7 @@
       <TextField fx:id="updateaptClientName" editable="false" layoutX="16.0" layoutY="72.0" prefHeight="27.0" prefWidth="368.0" promptText="Clients Name" />
       <ComboBox fx:id="updateaptType" layoutX="16.0" layoutY="132.0" prefHeight="25.0" prefWidth="171.0" />
       <ComboBox fx:id="updateaptLocation" layoutX="205.0" layoutY="132.0" prefHeight="27.0" prefWidth="180.0" />
-      <DatePicker fx:id="updateaptDate" layoutX="14.0" layoutY="192.0" prefHeight="25.0" prefWidth="115.0" />
+      <DatePicker fx:id="updateaptDate" editable="false" layoutX="14.0" layoutY="192.0" prefHeight="25.0" prefWidth="115.0" />
       <ComboBox fx:id="updateaptStartTime" layoutX="139.0" layoutY="192.0" prefHeight="27.0" prefWidth="115.0" />
       <ComboBox fx:id="updateaptEndTime" layoutX="268.0" layoutY="192.0" prefHeight="27.0" prefWidth="115.0" />
       <TextField fx:id="updateaptContact" layoutX="15.0" layoutY="246.0" prefHeight="27.0" prefWidth="368.0" />

@@ -89,49 +89,67 @@ public class AddAptController implements Initializable {
     
     public String setAptType(){
         String Type = (String) newaptAppointmentType.getSelectionModel().getSelectedItem();
+        if (Type != null){
         return Type;
+        } else{
+            return "";
+        }
     }
     //Set Location City Object to String to use for correct DateTime Format
     public String SetLocationName(){
         City city = newaptLocation.getSelectionModel().getSelectedItem();
+        if(city != null){       
         int cityId = city.getId();
-        City.setSelectedId(cityId);
-        
-        if(cityId == 1) {
-            String Location = "America/Phoenix";
-            return Location;
-        }else if(cityId == 2){
-            String Location = "America/New_York";
-            return Location;           
-        }else{
+            City.setSelectedId(cityId);
+
+            if(cityId == 1) {
+                String Location = "America/Phoenix";
+                return Location;
+            }else if(cityId == 2){
+                String Location = "America/New_York";
+                return Location;           
+            }
+        }
             String Location = "Europe/London";
-            return Location;
-        }  
+            return Location;         
     }
     public String setAptStart() throws ParseException{
         String Start = (String) newaptStartTime.getSelectionModel().getSelectedItem();
-        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
-        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
-        
-        //Takes Start Time selected and changes to 24 Hour Format
-        String time24 = date24Format.format(date12Format.parse(Start));   	
-        return time24;
+            if(Start != null){
+            SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+
+            //Takes Start Time selected and changes to 24 Hour Format
+            String time24 = date24Format.format(date12Format.parse(Start));   	
+            return time24;
+            } else{
+                return "";
+            }
     }
     
     
     public String setAptEnd() throws ParseException{
         String End = (String) newaptEndTime.getSelectionModel().getSelectedItem();
-        SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
-        SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
-        
-        //Takes End Time selected and changes to 24 Hour Format
-    	String time24 = date24Format.format(date12Format.parse(End));
-        return time24;
+            if (End != null){
+            SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
+            SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
+
+            //Takes End Time selected and changes to 24 Hour Format
+            String time24 = date24Format.format(date12Format.parse(End));
+            return time24;
+            } else {
+                return "";
+            }
     }
     
     public String setAptDate(){
-        String Date = newaptDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        return Date;
+        LocalDate Date = newaptDate.getValue();        
+        if (Date != null){
+            String Date2 = Date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            return Date2;
+        } else{
+            return "";
+        }
     }
     
     
@@ -141,12 +159,12 @@ public class AddAptController implements Initializable {
         //Drop Down Select need to have a validation before trying to be set- Currently Breaking
         
         int customerId = customerToCustomerId();
-        String title = newaptTitle.getText();
-        String description = newaptDescription.getText();
+        String title = (newaptTitle.getText() != null) ? newaptTitle.getText() : "";
+        String description = (newaptDescription.getText() != null) ? newaptDescription.getText() : "";
         String location = SetLocationName();
-        String contact = newaptContact.getText();
+        String contact = (newaptContact.getText()!= null) ? newaptContact.getText() : "";
         String type = setAptType();
-        String url = newaptUrl.getText();
+        String url = (newaptUrl.getText()!= null) ? newaptUrl.getText() : "";
         String start = setAptStart();
         String end = setAptEnd();
         String date = setAptDate();
@@ -159,10 +177,10 @@ public class AddAptController implements Initializable {
                 alert.setHeaderText("Need Appointment Date and Time");
                 alert.setContentText("Please Selected Date and Time for Appointment");
                 alert.showAndWait();              
-        }
-        
+        } else{     
         String startDateTime = Appointment.getDateTime(date, start, location);
         String endDateTime = Appointment.getDateTime(date, end, location);
+        
                
         try {
             exceptionMessage = Appointment.isAptValid(type, location, date, start, end, contact, url, title, description, exceptionMessage);
@@ -203,7 +221,7 @@ public class AddAptController implements Initializable {
             alert.setContentText("Please Check Fields and make sure you fill out each field");
             alert.showAndWait();
         }       
-    }
+    }}
     
     @FXML
     void newAptCancel(ActionEvent event) throws IOException {

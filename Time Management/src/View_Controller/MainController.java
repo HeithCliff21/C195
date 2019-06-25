@@ -22,10 +22,14 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -189,7 +193,6 @@ public class MainController implements Initializable {
        
     @FXML
     void AddCustomer(ActionEvent event) throws IOException {
-
         Parent addCustomer = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
         Scene scene = new Scene(addCustomer);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -202,6 +205,14 @@ public class MainController implements Initializable {
     @FXML
     void UpdateCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
+        
+        if(customer == null){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error editing Customer");
+                alert.setHeaderText("No Customer Selected");
+                alert.setContentText("Please selected a Customer to edit");
+                alert.showAndWait();   
+        }else{
                      
         updateCustomerId = customer.getCustomerId();
         updateCustomerName = customer.getCustomerName();
@@ -217,7 +228,7 @@ public class MainController implements Initializable {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
-               
+        }        
     }
     
     
@@ -226,19 +237,27 @@ public class MainController implements Initializable {
     void DeleteCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
         
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.initModality(Modality.NONE);
-        alert.setTitle("Confirm Delete");
-        alert.setHeaderText("Confirm?");
-        alert.setContentText("Are you sure you want to client " + customer.getCustomerName() + "?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            Customer.deleteCustomer(customer.getCustomerId(), customer.getAddId());            
-            updateCustomerTable();
-            System.out.println("Client " + customer.getCustomerName() + " was removed.");
-        } else {
-            System.out.println("Client " + customer.getCustomerName() + " was not removed.");
-        } 
+        if(customer == null){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Deleting Customer");
+                alert.setHeaderText("No Customer Selected");
+                alert.setContentText("Please selected a Customer");
+                alert.showAndWait();                              
+        }else{
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initModality(Modality.NONE);
+            alert.setTitle("Confirm Delete");
+            alert.setHeaderText("Confirm?");
+            alert.setContentText("Are you sure you want to client " + customer.getCustomerName() + "?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                Customer.deleteCustomer(customer.getCustomerId(), customer.getAddId());            
+                updateCustomerTable();
+                System.out.println("Client " + customer.getCustomerName() + " was removed.");
+            } else {
+                System.out.println("Client " + customer.getCustomerName() + " was not removed.");
+            } 
+        }
     }
     
      @FXML
@@ -254,58 +273,87 @@ public class MainController implements Initializable {
        @FXML
     void AddApt(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
-        updateCustomerId = customer.getCustomerId();
-        updateCustomerName = customer.getCustomerName();
-        
-         if(updateCustomerName.equals("")){
+        if(customer == null){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Adding Apt");
                 alert.setHeaderText("Please select a client");
                 alert.setContentText("Please selected a client to add a appointment");
                 alert.showAndWait();              
-        }
+        }else{
+        
+        updateCustomerId = customer.getCustomerId();
+        updateCustomerName = customer.getCustomerName();
+        
+         
         
         Parent AddApt = FXMLLoader.load(getClass().getResource("AddApt.fxml"));
         Scene scene = new Scene(AddApt);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(scene);
         window.show();
-    }
+    }}
        
     
     @FXML
     void UpdateApt(ActionEvent event) throws IOException {
+        ArrayList<TableView> appointTableArray = new ArrayList<>();
+    
         
-        Appointment appointmentA = AllAptTable.getSelectionModel().getSelectedItem();             
-        Appointment appointmentM = MonthAptTable.getSelectionModel().getSelectedItem();        
-        Appointment appointmentW = WeekAptTable.getSelectionModel().getSelectedItem();
+        appointTableArray.add(AllAptTable);
+        appointTableArray.add(MonthAptTable);
+        appointTableArray.add(WeekAptTable);
+                      
+        AtomicReference<Appointment> appointmentArray = new AtomicReference<>();
         
-        if (appointmentA == null){
-            Appointment appointment = appointmentM
+        //Lambda get selected from any of the Appointment tables
+        appointTableArray.forEach((appointmentTable)->{            
+            if(appointmentTable.getSelectionModel().getSelectedItem() != null){                
+            appointmentArray.set((Appointment) appointmentTable.getSelectionModel().getSelectedItem());        
+            }
+            
+        });
+        if (appointmentArray.get() != null ) {
+            Appointment appointment = appointmentArray.get();
+            
+            updateAptId = appointment.getAppointmentId();
+            updateAptCustId = appointment.getCustomerId();
+            updateAptTitle = appointment.getTitle();
+            updateAptDescription = appointment.getDescription();
+            updateAptLocation = appointment.getLocation();
+            updateAptContact = appointment.getContact();
+            updateAptUrl = appointment.getUrl();
+            updateAptStart = appointment.getStart();
+            updateAptEnd = appointment.getEnd();
+            updateAptType = appointment.getType();
+
+            Parent UpdateApt = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
+            Scene scene = new Scene(UpdateApt);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(scene);
+            window.show();
+        }else{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Edditing Appointment");
+                alert.setHeaderText("No Appointment Selected");
+                alert.setContentText("Please selected an appointment to edit");
+                alert.showAndWait();              
+                throw new IOException("No Appointment Selected");
         }
+
         
-        // might need to add other Tables (week/month)
-        updateAptId = appointment.getAppointmentId();
-        updateAptCustId = appointment.getCustomerId();
-        updateAptTitle = appointment.getTitle();
-        updateAptDescription = appointment.getDescription();
-        updateAptLocation = appointment.getLocation();
-        updateAptContact = appointment.getContact();
-        updateAptUrl = appointment.getUrl();
-        updateAptStart = appointment.getStart();
-        updateAptEnd = appointment.getEnd();
-        updateAptType = appointment.getType();
-        
-        Parent UpdateApt = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
-        Scene scene = new Scene(UpdateApt);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(scene);
-        window.show();
     }
     
        @FXML
     void DeleteApt(ActionEvent event) throws IOException, ParseException {
         Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
+        
+        if(appointment == null){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Deleting Appointment");
+                alert.setHeaderText("No Appointment Selected");
+                alert.setContentText("Please selected an Appointment");
+                alert.showAndWait(); 
+        }else{
         
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.initModality(Modality.NONE);
@@ -320,6 +368,7 @@ public class MainController implements Initializable {
         } else {
             System.out.println("Appointment for client " + customerName(appointment.getCustomerId()) + " was not removed.");
         } 
+        }
     }
     
     public String customerName(int custID){         

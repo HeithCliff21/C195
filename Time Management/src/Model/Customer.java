@@ -174,19 +174,19 @@ public class Customer{
     //Client Validation Method
     public static String isClientValid(String clientName, int clientPhone, String clientAddress, int clientCity, int clientZip, String errorMessage) {
         if (clientName.equals("")) {
-            errorMessage = errorMessage + ("Name cannot be empty");
+            errorMessage = errorMessage + ("Name cannot be empty\n");
         }
         if (clientPhone < 1) {
-            errorMessage = errorMessage + ("Phone Number cannot be empty");
+            errorMessage = errorMessage + ("Phone Number cannot be empty\n");
         }
         if (clientAddress.equals("")) {
-            errorMessage = errorMessage + ("Address cannot be empty");
+            errorMessage = errorMessage + ("Address cannot be empty\n");
         }
         if (clientCity <= 0) {
-            errorMessage = errorMessage + ("City cannot be empty");
+            errorMessage = errorMessage + ("City cannot be empty\n");
         }        
         if (clientZip < 1) {
-            errorMessage = errorMessage + ("Zip Code cannot be empty");
+            errorMessage = errorMessage + ("Zip Code cannot be empty\n");
         }
         return errorMessage;
     }  

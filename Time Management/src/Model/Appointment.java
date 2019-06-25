@@ -22,10 +22,6 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-interface UTCTimeConversion{
-   String convertToUTC(String date);
-   String convertFromUTC(String date);
-}
 /**
  *
  * @author admin
@@ -187,6 +183,7 @@ public class Appointment {
                 allAppointments.add(newAppointment);
              }
              statement.close();
+             // Lambda Changes all appointment in observerable list to Local Time zone
              allAppointments.forEach((appointment)->{
                  
                  ZoneId ZoneLoc = ZoneId.systemDefault();
@@ -234,6 +231,7 @@ public class Appointment {
                 monthAppointments.add(newAppointment);
              }
              statement.close();
+             // Lambda Changes all appointment in observerable list to Local Time zone
              monthAppointments.forEach((appointment)->{
                  
                  ZoneId ZoneLoc = ZoneId.systemDefault();
@@ -281,6 +279,7 @@ public class Appointment {
                 weekAppointments.add(newAppointment);
              }
              statement.close();
+             // Lambda Changes all appointment in observerable list to Local Time zone
              weekAppointments.forEach((appointment)->{
                  
                  ZoneId ZoneLoc = ZoneId.systemDefault();
@@ -501,31 +500,31 @@ public class Appointment {
        //Appointment Validation Method
     public static String isAptValid(String aptType, String location, String date, String sTime, String eTime, String contact, String url, String title, String description, String errorMessage) {
         if (aptType.equals("")) {
-            errorMessage = errorMessage + ("Appointment Type cannot be empty");
+            errorMessage = errorMessage + ("Appointment Type cannot be empty\n");
         }
         if (location.equals("")) {
-            errorMessage = errorMessage + ("Location cannot be blank");
+            errorMessage = errorMessage + ("Location cannot be blank\n");
         }
         if (date.equals("")) {
-            errorMessage = errorMessage + ("Date cannot be empty");
+            errorMessage = errorMessage + ("Date cannot be empty\n");
         }
         if (sTime.equals("")) {
-            errorMessage = errorMessage + ("Start Time cannot be empty");
+            errorMessage = errorMessage + ("Start Time cannot be empty\n");
         }
         if (eTime.equals("")) {
-            errorMessage = errorMessage + ("End cannot be empty");
+            errorMessage = errorMessage + ("End cannot be empty\n");
         }
         if (contact.equals("")) {
-            errorMessage = errorMessage + ("Contact cannot be blank");
+            errorMessage = errorMessage + ("Contact cannot be blank\n");
         }
         if (url.equals("")) {
-            errorMessage = errorMessage + ("Url cannot be blank");
+            errorMessage = errorMessage + ("Url cannot be blank\n");
         }
         if (title.equals("")) {
-            errorMessage = errorMessage + ("Title cannot be blank");
+            errorMessage = errorMessage + ("Title cannot be blank\n");
         }
         if (description.equals("")) {
-            errorMessage = errorMessage + ("Description cannot be empty");
+            errorMessage = errorMessage + ("Description cannot be empty\n");
         }       
         return errorMessage;
     }  

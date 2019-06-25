@@ -19,7 +19,7 @@ public class Login {
     
      public static void log (String username, String location, String dateTime, boolean success) {
         try (FileWriter fw = new FileWriter(FILENAME, true);
-             PrintWriter pw = new PrintWriter(fw)) {
+            PrintWriter pw = new PrintWriter(fw)) {
             pw.println ("UserName:" + username + " Location:" + location + " DateTime:" + dateTime + " " + (success ? " Success" : " Failure"));
         } catch (IOException e) {
             System.out.println("Logger Error: " + e.getMessage());
