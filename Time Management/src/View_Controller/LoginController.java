@@ -5,9 +5,11 @@
  */
 package View_Controller;
 
+import Model.Appointment;
 import Model.User;
 import java.sql.SQLException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,9 +17,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -86,6 +91,20 @@ public class LoginController {
                 setError();
             }
         }   
+    
+    @FXML
+    private void Cancelbtn(ActionEvent event){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.initModality(Modality.NONE);
+        alert.setTitle("Exit Program");
+        alert.setHeaderText("Confirm?");
+        alert.setContentText("Are you wanting to exit the program?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            System.exit(0);
+        }      
+    }
+    
     /**
      * Initializes the controller class.
      */

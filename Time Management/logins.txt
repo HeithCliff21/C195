@@ -3,3 +3,7 @@ testAmerica/Denver2019-06-23T05:33:46.274 Success
 UserName: America/Denver 2019-06-23T05:37:16.679  Failure
 UserName:test America/Denver 2019-06-23T05:37:23.283  Failure
 UserName:test America/Denver 2019-06-23T05:37:29.789  Success
+UserName:test Location:America/Boise DateTime:2019-06-24T19:29:37.501  Success
+UserName:test Location:America/Boise DateTime:2019-06-24T19:33:22.756  Success
+UserName:test Location:America/Boise DateTime:2019-06-24T19:35:46.863  Success
+UserName:test Location:America/Boise DateTime:2019-06-24T19:37:46.647  Success

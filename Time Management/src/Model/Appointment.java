@@ -135,7 +135,7 @@ public class Appointment {
         this.contact= contact;
     }
     
-    public void setUrl(String Url){
+    public void setUrl(String url){
         this.url = url;
     }
     

@@ -275,7 +275,15 @@ public class MainController implements Initializable {
     
     @FXML
     void UpdateApt(ActionEvent event) throws IOException {
-        Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
+        
+        Appointment appointmentA = AllAptTable.getSelectionModel().getSelectedItem();             
+        Appointment appointmentM = MonthAptTable.getSelectionModel().getSelectedItem();        
+        Appointment appointmentW = WeekAptTable.getSelectionModel().getSelectedItem();
+        
+        if (appointmentA == null){
+            Appointment appointment = appointmentM
+        }
+        
         // might need to add other Tables (week/month)
         updateAptId = appointment.getAppointmentId();
         updateAptCustId = appointment.getCustomerId();
