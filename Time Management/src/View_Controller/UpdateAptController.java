@@ -113,7 +113,7 @@ public class UpdateAptController implements Initializable {
     
     public int LocationSet(){  
         String location = appointmentToLocation();
-        if(location != "America/Phoniex") {
+        if(location != "America/Phoenix") {
             int cityId = 1;
             return cityId;
         } else if (location != "America/New_York") {
@@ -132,7 +132,7 @@ public class UpdateAptController implements Initializable {
         City.setSelectedId(cityId);
         
         if(cityId == 1) {
-            String Location = "America/Phoniex";
+            String Location = "America/Phoenix";
             return Location;
         }else if(cityId == 2){
             String Location = "America/New_York";
@@ -147,31 +147,26 @@ public class UpdateAptController implements Initializable {
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
         
-    	String time24;
-        time24 = date24Format.format(date12Format.parse(Start));
-    	
+        //Takes Start Time selected and changes to 24 Hour Format
+    	String time24 = date24Format.format(date12Format.parse(Start));   	
         return time24;
     }
-    
-    
+        
     public String setAptEnd() throws ParseException{
         String End = (String) updateaptEndTime.getSelectionModel().getSelectedItem();
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
         
-    	String time24;
-        time24 = date24Format.format(date12Format.parse(End));
-    	
+        //Takes End Time selected and changes to 24 Hour Format
+    	String time24 = date24Format.format(date12Format.parse(End));   	
         return time24;
     }
+    
     public String setAptDate(){
         String Date = updateaptDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return Date;
     }
-    
-    
-    
-    
+     
      @FXML
     void updateAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
         
@@ -188,6 +183,8 @@ public class UpdateAptController implements Initializable {
         String date = setAptDate();
         
         
+        
+        //Need to Figure out Error if no drop down is selected
         if(start.equals("")|end.equals("")|date.equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Adding Apt Date");
@@ -238,13 +235,7 @@ public class UpdateAptController implements Initializable {
             alert.setHeaderText("Error");
             alert.setContentText("Please Check Fields and make sure you fill out each field");
             alert.showAndWait();
-        }       
-           
-        System.out.println("date: " + setAptDate());
-        System.out.println("start: " + setAptStart());
-        System.out.println("end: " + setAptEnd());
-        System.out.println("location: " + SetLocationName());
-              
+        }               
     }
     
     @FXML
@@ -279,7 +270,7 @@ public class UpdateAptController implements Initializable {
                     public void updateItem(LocalDate item, boolean empty) {
                         super.updateItem(item, empty);
  
-                        // Disable Monday, Tueday, Wednesday.
+                        // Disable Saturyday and Sunday
                         if (item.getDayOfWeek() == DayOfWeek.SATURDAY //
                             || item.getDayOfWeek() == DayOfWeek.SUNDAY
                             || item.isBefore(LocalDate.now())) {
@@ -324,25 +315,18 @@ public class UpdateAptController implements Initializable {
      public String customerName(int custID){
          //Customer.getAllCustomers();
         try {
-        Statement statement = DataBase.conn.createStatement();
-        String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
-        ResultSet rs = statement.executeQuery(query);
-        rs.next();
-        String custname = rs.getString("customerName");
-        
-        statement.close();
-        return custname;
-     }catch (SQLException e) {
+            Statement statement = DataBase.conn.createStatement();
+            String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            String custname = rs.getString("customerName");
+
+            statement.close();
+            return custname;
+        }catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             return null;
-}
-//        int custId = appointmentToCustId();
-//        String custName = Customer.getCustName(custId);
-//        String custname = Customer.getCustName(custId);
-        
-        // String name = CustomerTable.getCustomerName(appointmentToCustId());
-        // updateaptClientName.setText(name);
-//        return custname;
+        }
      }
 
     /**

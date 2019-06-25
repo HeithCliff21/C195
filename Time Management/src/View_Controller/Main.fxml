@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="1122.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainController">
+<AnchorPane id="AnchorPane" prefHeight="418.0" prefWidth="1122.0" xmlns="http://javafx.com/javafx/9.0.4" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View_Controller.MainController">
     
  <children>
       <Rectangle arcHeight="5.0" arcWidth="5.0" blendMode="MULTIPLY" height="49.0" stroke="BLACK" strokeType="INSIDE" width="1124.0">
@@ -117,6 +117,5 @@
             <Button layoutX="14.0" layoutY="303.0" mnemonicParsing="false" onAction="#Reports" prefHeight="32.0" prefWidth="89.0" text="Reports" />
          </children>
       </Pane>
-      <Button layoutX="1021.0" layoutY="9.0" mnemonicParsing="false" onAction="#MainExit" prefHeight="32.0" prefWidth="89.0" text="Exit" />
    </children>
 </AnchorPane>

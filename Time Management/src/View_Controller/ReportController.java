@@ -48,8 +48,6 @@ public class ReportController implements Initializable {
         window.show();
     }
     
-    
-    
     public void reportSchedule(){
         try {
             Statement statement = DataBase.conn.createStatement();

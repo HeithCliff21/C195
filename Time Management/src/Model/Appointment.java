@@ -296,69 +296,7 @@ public class Appointment {
             return null;
     }
 }
-
-//        public String getDateTimeFormat() {
-//        
-//            
-//            Timestamp ts = Timestamp.valueOf(this.aptStart.get());
-//        ZonedDateTime zdt;
-//        ZoneId zid;
-//        LocalTime lt;
-//        if(this.aptLocation.get().equals("New York")) {
-//            zid = ZoneId.of("America/New_York");
-//            zdt = ts.toLocalDateTime().atZone(zid);
-//            lt = zdt.toLocalTime().minusHours(4);
-//        } else if(this.aptLocation.get().equals("Phoenix")) {
-//            zid = ZoneId.of("America/Phoenix");
-//            zdt = ts.toLocalDateTime().atZone(zid);
-//            lt = zdt.toLocalTime().minusHours(7);
-//        } else {
-//            zid = ZoneId.of("Europe/London");
-//            zdt = ts.toLocalDateTime().atZone(zid);
-//            lt = zdt.toLocalTime().plusHours(1);
-//}
-//     
-//    }
-    
-//    public static String getName(int custID){
-//        try {
-//            Statement statement = DataBase.conn.createStatement();         
-//            String query = "SELECT * FROM customer WHERE customerID = '" + custID + "';";
-//            statement.executeQuery(query);
-//            
-//            
-//            
-//            ResultSet rs = statement.executeQuery(query);
-//             while(rs.next()){
-//                 Customer newCustomer = new Customer(
-//                 rs.getInt("customerId"),
-//                 rs.getString("customerName"),
-//                 rs.getInt("addressId"));
-//                 
-//                 System.out.println("CityID: " + newCustomer.getID());
-//                 System.out.println("CityName: " + newCustomer.getName());
-//                 System.out.println("CounrtyID: " + newCustomer.getAddressID());
-//             
-//                allCustomers.add(newCustomer);
-//             }
-//             statement.close();
-//             return allAppointments;
-//             
-//        }catch (SQLException e) {
-//            System.out.println("SQLException: " + e.getMessage());
-//            return null;
-//    }
-//    }
-        
-    
-    
-//    public static String getTime(String time){
-//       LocalDateTime ldt =  LocalDateTime.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
-//        return ldt.format(formatter);
-//    }
-    
-    
+  
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     
     private static final String DATEAM_FORMAT = "MM-dd-yyyy hh:mm a";
@@ -376,12 +314,6 @@ public class Appointment {
         ZoneId ZoneLoc = ZoneId.of(location);
         ZonedDateTime Appointment = ldt.atZone(UTC);
        
-//        ZonedDateTime srt = time.atZone(UTC);
-//                LocalDateTime.parse(time).atZone(UTC);
-//                LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATE_FORMAT));       
-//        ZonedDateTime srtZ = LocalDateTime.atZone(UTC);
-       
-        //Changing to Location Time
         LocalDateTime srtL = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of(location));
                            
         String srtS = srtL.toString();
@@ -390,6 +322,7 @@ public class Appointment {
         return dtime;    
     }
     
+    // Switches Location to UTC
     public static String getUTCLocationDateTime(String location, String time) throws ParseException{
         
         String time2 = time.replaceAll("\\.0*$", "");
@@ -410,7 +343,8 @@ public class Appointment {
         return dtime;    
     
     }
-    
+
+    // For taking Local Time to Appointment Location Time
     public static String getAptLocationDateTime(String location, String time) throws ParseException{
         
           
@@ -432,7 +366,7 @@ public class Appointment {
     
     
     
-    // Pulls Time to Location
+    // Pulls Local Time to Location
     public static String getlocationTime(String location, String Ttime) throws ParseException{
         
         
@@ -447,7 +381,7 @@ public class Appointment {
        
         return time12;
     }
-    //Pulls Date to Location
+    //Pulls Local Date to Location
     public static String getlocationDate(String location, String Ttime) throws ParseException{
         String date = getAptLocationDateTime(location,Ttime);
         String dateS[] =date.split(" ");
@@ -461,12 +395,12 @@ public class Appointment {
         return dateO;
     }
     
-    public static String getDateTime(String date, String time, String location) {
-        String dateInString = date + " " + time;
-        //String dateInString = "22-1-2015 10:15:55 AM";
+            // For Combining Appointment Date and Time and changing to UTC time to add to database
+        public static String getDateTime(String date, String time, String location) {
+        String dateInString = date + " " + time;       
         LocalDateTime ldt = LocalDateTime.parse(dateInString, DateTimeFormatter.ofPattern(DATE_FORMAT));
         ZoneId ZoneLoc = ZoneId.of(location);
-        
+       
         ZonedDateTime Appointment = ldt.atZone(ZoneLoc);
         
         LocalDateTime utc = LocalDateTime.ofInstant(Appointment.toInstant(), ZoneId.of("UTC"));
@@ -474,12 +408,9 @@ public class Appointment {
         String AptUtc = utc.toString();
         return AptUtc;      
 }
-    
+     
      public static boolean addApt(int customerId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
                 try {
-//                    String startDateTime = getDateTime(date, start, location);
-//                    String endDateTime = getDateTime(date, end, location);
-                    //appointmentAvialable(String startDateTime ,String endDateTime);
                     Statement statement = DataBase.conn.createStatement();
                     User user = User.getCurrentUser();
                     String username = user.getUsername();
@@ -499,9 +430,6 @@ public class Appointment {
 }
       public static boolean updateApt(int aptId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
         try {
-//                        Adding step in controller                    
-//String startDateTime = getDateTime(date, start, location);
-//                    String endDateTime = getDateTime(date, end, location);
                     Statement statement = DataBase.conn.createStatement();
                     User user = User.getCurrentUser();
                     String username = user.getUsername();
@@ -534,9 +462,7 @@ public class Appointment {
         return false;
     }
       
-      
-      
-      
+       //Check if User has an Appointment at Date start and End Time   
        public static boolean appointmentAvialableUser(String start, String End) throws SQLException{
             User user = User.getCurrentUser();
             int userId = user.getUserId();
@@ -554,7 +480,8 @@ public class Appointment {
              }
             return true;
        }
-            
+       
+       //Check if Client has an Appointment at Date start and End Time   
        public static boolean appointmentAvialableCust(String start, String End, int custId) throws SQLException{
             try {
             Statement statement = DataBase.conn.createStatement();

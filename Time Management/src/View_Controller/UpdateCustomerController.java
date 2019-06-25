@@ -146,10 +146,6 @@ public class UpdateCustomerController implements Initializable {
         }
     }
     
-
-//    public void setUpdateCustomer() {
-//        CustomerTable customer = Main.MainCustomersTable.getSelectionModel().getSelectedItem();
-//    }
     /**
      * Initializes the controller class.
      */
@@ -170,7 +166,5 @@ public class UpdateCustomerController implements Initializable {
         }
         
     }    
-//        UpdateCustomerCity.setValue(customerToCustCity());
-//        UpdateCustomerCity.getSelectionModel().select(customerToCustCity());    
 }
 

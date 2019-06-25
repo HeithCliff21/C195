@@ -98,7 +98,7 @@ public class AddAptController implements Initializable {
         City.setSelectedId(cityId);
         
         if(cityId == 1) {
-            String Location = "America/Phoniex";
+            String Location = "America/Phoenix";
             return Location;
         }else if(cityId == 2){
             String Location = "America/New_York";
@@ -113,9 +113,8 @@ public class AddAptController implements Initializable {
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
         
-    	String time24;
-        time24 = date24Format.format(date12Format.parse(Start));
-    	
+        //Takes Start Time selected and changes to 24 Hour Format
+        String time24 = date24Format.format(date12Format.parse(Start));   	
         return time24;
     }
     
@@ -125,11 +124,11 @@ public class AddAptController implements Initializable {
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
         
-    	String time24;
-        time24 = date24Format.format(date12Format.parse(End));
-    	
+        //Takes End Time selected and changes to 24 Hour Format
+    	String time24 = date24Format.format(date12Format.parse(End));
         return time24;
     }
+    
     public String setAptDate(){
         String Date = newaptDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         return Date;
@@ -152,6 +151,8 @@ public class AddAptController implements Initializable {
         String end = setAptEnd();
         String date = setAptDate();
         
+        
+        //Need to Figure out Error if no drop down is selected
         if(start.equals("")|end.equals("")|date.equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Adding Apt Date");
@@ -202,10 +203,6 @@ public class AddAptController implements Initializable {
             alert.setContentText("Please Check Fields and make sure you fill out each field");
             alert.showAndWait();
         }       
-        System.out.println("date: " + setAptDate());
-        System.out.println("start: " + setAptStart());
-        System.out.println("end: " + setAptEnd());
-        System.out.println("location: " + SetLocationName());     
     }
     
     @FXML
@@ -240,7 +237,7 @@ public class AddAptController implements Initializable {
                     public void updateItem(LocalDate item, boolean empty) {
                         super.updateItem(item, empty);
  
-                        // Disable Monday, Tueday, Wednesday.
+                         // Disable Saturyday and Sunday
                         if (item.getDayOfWeek() == DayOfWeek.SATURDAY //
                             || item.getDayOfWeek() == DayOfWeek.SUNDAY
                             || item.isBefore(LocalDate.now())) {
@@ -260,31 +257,9 @@ public class AddAptController implements Initializable {
         
         newaptDate.setValue(LocalDate.now());
         newaptDate.setShowWeekNumbers(false);
-        //getDayCellFactory();
-     
-        // Converter
-//        StringConverter<LocalDate> converter = new StringConverter<LocalDate>() {
-//        DateTimeFormatter dateFormatter =
-//                      DateTimeFormatter.ofPattern("YYYY-MM-DD");
-//
-//            @Override
-//            public String toString(LocalDate object) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }
-//
-//            @Override
-//            public LocalDate fromString(String string) {
-//                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//            }         
-//        };
+        
      }
     
-//    public static LocalDate LOCAL_DATE (String dateString){
-//    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//    LocalDate localDate = LocalDate.parse(dateString, formatter);
-//    return localDate;
-//}
-
     /**
      * Initializes the controller class.
      */
@@ -294,8 +269,7 @@ public class AddAptController implements Initializable {
         newaptLocation.getItems().addAll(City.allCities);
         newaptStartTime.setItems(AptStartTime);
         newaptEndTime.setItems(AptEndTime);
-        newaptClientName.setText(customerToCustName());
-        // Disable Monday, Tueday, Wednesday.
+        newaptClientName.setText(customerToCustName());     
         SetDate();
         Callback<DatePicker, DateCell> dayCellFactory= this.getDayCellFactory();
         newaptDate.setDayCellFactory(dayCellFactory);

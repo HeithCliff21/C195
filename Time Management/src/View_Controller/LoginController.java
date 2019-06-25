@@ -64,15 +64,15 @@ public class LoginController {
         localErrorMessage.setText(rb.getString("Error"));
     }
     
-     // Submit log-in credentials to be checked
+            // Submit log-in credentials to be checked
     @FXML
     private void Submitbtn(ActionEvent event) throws SQLException, Exception {
         // Retrieves user's inputs and clears password field
         String userName = txtUserName.getText();
         String password = txtPassword.getText();
-// Check credentials against database
+            // Check credentials against database
         boolean checkCredentials = User.login(userName, password);
-        // Check if credentials were correct
+            // Check if credentials were correct
         if (checkCredentials) {
             // Show main screen 
         Parent MainScreen = FXMLLoader.load(getClass().getResource("Main.fxml"));

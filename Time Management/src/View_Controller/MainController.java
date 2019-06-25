@@ -185,33 +185,8 @@ public class MainController implements Initializable {
         public static String appointmentToDescription(){
         return updateAptDescription;
     }
-         
-    
-              
-  /*  @FXML
-    private TableView<Customer> MainCustomerTable;
-    @FXML
-    private TableColumn<Customer, Integer> MainCustomerID;
-    @FXML
-    private TableColumn<Customer, String> MainCustomerName;
-    @FXML
-    private TableColumn<Customer, String> MainCustomerAddress;
-    @FXML
-    private TableColumn<Customer, String> MainCustomerPhone;
-    @FXML
-    private TableView<Appointment> MainProductTable;
-    @FXML
-    private TableColumn<Product, Integer> MainProductID;
-    @FXML
-    private TableColumn<Product, String> MainProductName;
-    @FXML
-    private TableColumn<Product, Integer> MainProductInvLevel;
-    @FXML
-    private TableColumn<Product, Double> MainProductPricePer;
-*/
-    
-    
-    
+
+       
     @FXML
     void AddCustomer(ActionEvent event) throws IOException {
 
@@ -297,16 +272,6 @@ public class MainController implements Initializable {
         window.show();
     }
        
-//    @FXML
-//    String CustName(int custId){
-//        
-//        MainCustomersTable.getSelectionModel().select(custId);
-//        CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
-//        updateCustomerName = customer.getCustomerName();
-//        
-//        String updateCustname = customer.getCustomerName();
-//        return updateCustname;
-//    }
     
     @FXML
     void UpdateApt(ActionEvent event) throws IOException {
@@ -323,15 +288,6 @@ public class MainController implements Initializable {
         updateAptEnd = appointment.getEnd();
         updateAptType = appointment.getType();
         
-//        MainCustomersTable.getSelectionModel().setSelectedItem(updateAptCustId);
-//        MainCustomersTable.getSelectionModel().select(updateAptCustId);
-//        CustomerTable customer = MainCustomersTable.getSelectionModel().selectedItem();
-//        CustomerTable test = MainCustomerTable.getSelectedItems();
-//        updateAptCustName = customer.getCustomerName();
-                 
-//        updateAptDate = appointment.getDate();
-        
-
         Parent UpdateApt = FXMLLoader.load(getClass().getResource("UpdateApt.fxml"));
         Scene scene = new Scene(UpdateApt);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -358,12 +314,7 @@ public class MainController implements Initializable {
         } 
     }
     
-       @FXML
-    void MainExit(ActionEvent event) throws IOException {
-    }
-    
-    public String customerName(int custID){
-         //Customer.getAllCustomers();
+    public String customerName(int custID){         
         try {
         Statement statement = DataBase.conn.createStatement();
         String query = "SELECT * FROM customer WHERE customerId = '" + custID + "';";
@@ -379,31 +330,6 @@ public class MainController implements Initializable {
         }
     }
 
-    
- /*   
-     public void updateCustomersTable() {
-        MainCustomerTable.setItems(Inventory.getParts());
-    }
-
-    public void updateAppointmentsTable() {
-        try {
-            ObservableList<Product> products = Inventory.getProducts();
-            MainProductTable.setItems(Inventory.getProducts());
-        }
-        catch (Exception e) {
-            
-        }
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        updatePartTable();
-        updateProductTable();
-        MainPartID.setCellValueFactory(new PropertyValueFactory("partID"));
-        MainPartName.setCellValueFactory(new PropertyValueFactory("name"));
-    /**
-     * Initializes the controller class.
-     */
 
     public void updateCustomerTable(){
         MainCustomersTable.setItems(CustomerTable.getCustomersTable());
@@ -417,21 +343,23 @@ public class MainController implements Initializable {
     
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     
+    
+    //Checks If there is an Appointment within 15 min
     public void checkForAppt() throws SQLException, ParseException{
 	LocalDateTime now = LocalDateTime.now();
         LocalDateTime future = LocalDateTime.now().plusMinutes(15);
-        
-        
-        
+                      
         String sNow = now.format(formatter);
         String sFuture = future.format(formatter);
         
         //Possible lambda
         String location = "UTC";
         
+        //Taking Current Time and 15 min and switching into "UTC" Time
         String sNowU = Appointment.getUTCLocationDateTime(location, sNow);
         String sFutureU = Appointment.getUTCLocationDateTime(location, sFuture);
-                       
+               
+        //Check against database if there are any appointments within 15 min. 
         if (Appointment.appointmentAvialableUser(sNowU,sFutureU) == false){
             //Message for Appointment within 15 min
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -439,15 +367,13 @@ public class MainController implements Initializable {
             alert.setHeaderText("Pending Appointment");
             alert.setContentText("You have an Appointment with 15 min");
             alert.showAndWait();
-        }
-       
+        }      
     }
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Address.getAllAddress();
-        
+        Address.getAllAddress();        
         City.getAllCities();
         Country.getAllCountries();
         Customer.getAllCustomers();
