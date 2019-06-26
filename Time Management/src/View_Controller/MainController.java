@@ -232,7 +232,7 @@ public class MainController implements Initializable {
     }
     
     
-    
+    //Delete Customer from database
     @FXML
     void DeleteCustomer(ActionEvent event) throws IOException {
         CustomerTable customer = MainCustomersTable.getSelectionModel().getSelectedItem();
@@ -343,6 +343,7 @@ public class MainController implements Initializable {
         
     }
     
+    //Get info to Delete Apt
        @FXML
     void DeleteApt(ActionEvent event) throws IOException, ParseException {
         Appointment appointment = AllAptTable.getSelectionModel().getSelectedItem();
@@ -387,11 +388,12 @@ public class MainController implements Initializable {
         }
     }
 
-
+    //Displays/sets Customers table
     public void updateCustomerTable(){
         MainCustomersTable.setItems(CustomerTable.getCustomersTable());
     }
 
+    //Displays/sets appointment for User All, Month, and Week. 
     public void updateAppointmentTable() throws ParseException {
         AllAptTable.setItems(Appointment.getAllAppointments());  
         MonthAptTable.setItems(Appointment.getMonthAppointments());
@@ -408,8 +410,6 @@ public class MainController implements Initializable {
                       
         String sNow = now.format(formatter);
         String sFuture = future.format(formatter);
-        
-        //Possible lambda
         String location = "UTC";
         
         //Taking Current Time and 15 min and switching into "UTC" Time

@@ -81,7 +81,8 @@ public class AddCustomerController implements Initializable{
             AddCustomerCountry.setText("United States");       
         }
      }
-     
+       
+    //Gets Info and saves customer into Database 
     @FXML
     void AddCustomerSave(ActionEvent event) throws IOException {
         // Retrieves Values from text boxes

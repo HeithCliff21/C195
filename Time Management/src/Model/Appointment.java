@@ -148,6 +148,8 @@ public class Appointment {
      * @return
      * @throws java.sql.SQLException
      */
+    
+    //Gets All Appointment for User to be displayed
     public static ObservableList<Appointment> getAllAppointments(){
         User user = User.getCurrentUser();
         int userId = user.getUserId();
@@ -199,6 +201,7 @@ public class Appointment {
             return null;
     }
 }
+    //Gets Appointment for User for that month to be displayed
     public static ObservableList<Appointment> getMonthAppointments() throws ParseException{
         monthAppointments.clear();
         LocalDate now = LocalDate.now();
@@ -247,6 +250,7 @@ public class Appointment {
             return null;
     }
 }
+        //Gets Appointment for User for that week to be displayed
         public static ObservableList<Appointment> getWeekAppointments() throws ParseException{
         weekAppointments.clear();
         LocalDate now = LocalDate.now();
@@ -345,8 +349,7 @@ public class Appointment {
 
     // For taking Local Time to Appointment Location Time
     public static String getAptLocationDateTime(String location, String time) throws ParseException{
-        
-          
+    
         LocalDateTime ldt = LocalDateTime.parse(time, DateTimeFormatter.ofPattern(DATEAM_FORMAT));
         ZoneId ZoneaptLoc = ZoneId.of(location);
         ZoneId ZoneLoc = ZoneId.systemDefault();
@@ -361,14 +364,11 @@ public class Appointment {
         
         return dtime;    
     
-    }
+    }      
     
-    
-    
-    // Pulls Local Time to Location
+    // Seperates Location time to be displayed in edit window
     public static String getlocationTime(String location, String Ttime) throws ParseException{
-        
-        
+            
         String time = getAptLocationDateTime(location,Ttime);
         String timeS[] =time.split(" ");
         String timeL = timeS[1];
@@ -380,8 +380,9 @@ public class Appointment {
        
         return time12;
     }
-    //Pulls Local Date to Location
+    //Seperates Location date to be displayed in edit window
     public static String getlocationDate(String location, String Ttime) throws ParseException{
+        
         String date = getAptLocationDateTime(location,Ttime);
         String dateS[] =date.split(" ");
         String dateL = dateS[0]; 
@@ -394,7 +395,7 @@ public class Appointment {
         return dateO;
     }
     
-            // For Combining Appointment Date and Time and changing to UTC time to add to database
+        // For Combining Appointment Date and Time and changing to UTC time to add to database
         public static String getDateTime(String date, String time, String location) {
         String dateInString = date + " " + time;       
         LocalDateTime ldt = LocalDateTime.parse(dateInString, DateTimeFormatter.ofPattern(DATE_FORMAT));
@@ -407,7 +408,7 @@ public class Appointment {
         String AptUtc = utc.toString();
         return AptUtc;      
 }
-     
+     // Saves Apt to Database
      public static boolean addApt(int customerId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
                 try {
                     Statement statement = DataBase.conn.createStatement();
@@ -426,7 +427,8 @@ public class Appointment {
             System.out.println("SQLException: " + e.getMessage());
         }
         return false;
-}
+}       
+     // Update Apt to Database
       public static boolean updateApt(int aptId, String title, String description, String location, String contact, String type, String url, String startDateTime, String endDateTime) {
         try {
                     Statement statement = DataBase.conn.createStatement();
@@ -446,7 +448,7 @@ public class Appointment {
         return false;
 }
       
-      // Delete Customer from Database
+     // Delete Customer from Database
     public static boolean deleteapt (int aptId) {
         try {
             Statement statement = DataBase.conn.createStatement();

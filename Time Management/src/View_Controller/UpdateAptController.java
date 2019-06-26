@@ -172,6 +172,7 @@ public class UpdateAptController implements Initializable {
         }
     }
      
+    // Gets Info to update Apt in database
      @FXML
     void updateAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
         

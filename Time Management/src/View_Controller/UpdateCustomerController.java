@@ -88,6 +88,7 @@ public class UpdateCustomerController implements Initializable {
         }
      }
     
+     // Update Customer record 
     @FXML
     void UpdateCustomerSave(ActionEvent event) throws IOException {
         // Retrieves Values from text boxes

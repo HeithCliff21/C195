@@ -48,6 +48,7 @@ public class ReportController implements Initializable {
         window.show();
     }
     
+    //Creates report for user schedule with appointid type and start and end times
     public void reportSchedule(){
         try {
             Statement statement = DataBase.conn.createStatement();
@@ -76,7 +77,7 @@ public class ReportController implements Initializable {
         }
 }
 
-  
+   //Creates report for number of appointment for Month
     public void reportMonth(){
         try {
             Statement statement = DataBase.conn.createStatement();
@@ -100,6 +101,7 @@ public class ReportController implements Initializable {
         }
     }
     
+    //Creates report for number of appointment for location
     public void reportLocation(){
          try {
             Statement statement = DataBase.conn.createStatement();

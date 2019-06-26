@@ -152,12 +152,9 @@ public class AddAptController implements Initializable {
         }
     }
     
-    
+    //Get info to Save apt into database
      @FXML
-    void newAptSave(ActionEvent event) throws IOException, ParseException, SQLException {
-        
-        //Drop Down Select need to have a validation before trying to be set- Currently Breaking
-        
+    void newAptSave(ActionEvent event) throws IOException, ParseException, SQLException {        
         int customerId = customerToCustomerId();
         String title = (newaptTitle.getText() != null) ? newaptTitle.getText() : "";
         String description = (newaptDescription.getText() != null) ? newaptDescription.getText() : "";
@@ -168,8 +165,7 @@ public class AddAptController implements Initializable {
         String start = setAptStart();
         String end = setAptEnd();
         String date = setAptDate();
-        
-        
+                
         //Need to Figure out Error if no drop down is selected
         if(start.equals("")|end.equals("")|date.equals("")){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
