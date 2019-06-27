@@ -9,3 +9,8 @@ UserName:test Location:America/Denver DateTime:2019-06-26T21:44:58.811  Success
 UserName:test Location:America/Denver DateTime:2019-06-26T21:53:03.357  Success
 UserName: Location:America/Denver DateTime:2019-06-26T22:02:15.571  Failure
 UserName:test Location:America/Denver DateTime:2019-06-26T22:02:25.996  Success
+UserName:test Location:America/Boise DateTime:2019-06-27T09:36:38.600  Success
+UserName:test Location:America/Boise DateTime:2019-06-27T09:41:44.616  Success
+UserName:test Location:America/Boise DateTime:2019-06-27T09:42:45.491  Success
+UserName:test Location:America/Boise DateTime:2019-06-27T09:44:34.419  Success
+UserName:test Location:America/Boise DateTime:2019-06-27T09:45:37.682  Success

@@ -102,7 +102,7 @@ public class UpdateCustomerController implements Initializable {
         int customerId = customerToCustomerId();
         
         try {
-            exceptionMessage = Customer.isClientValid(Name, Integer.parseInt(Phone) ,Address,cityId, Integer.parseInt(Zip), exceptionMessage);
+            exceptionMessage = Customer.isClientValid(Name, Phone ,Address,cityId, Zip, exceptionMessage);
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Adding Customer");
@@ -122,7 +122,7 @@ public class UpdateCustomerController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error Adding Part");
         alert.setHeaderText("Error");
-        alert.setContentText("Please Check Fields and Make sure to Only have Numbers in Phone Number and Zip Code");
+        alert.setContentText("Please Check Fields all fields have values");
         alert.showAndWait();
         }
     }

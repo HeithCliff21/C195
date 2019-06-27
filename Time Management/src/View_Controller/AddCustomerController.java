@@ -94,7 +94,7 @@ public class AddCustomerController implements Initializable{
         int cityId = City.getSelectedId();
         
         try {
-            exceptionMessage = Customer.isClientValid(Name, Integer.parseInt(Phone) ,Address,cityId, Integer.parseInt(Zip), exceptionMessage);
+            exceptionMessage = Customer.isClientValid(Name, Phone ,Address,cityId, Zip, exceptionMessage);
             if (exceptionMessage.length() > 0) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Error Adding Customer");
@@ -114,7 +114,7 @@ public class AddCustomerController implements Initializable{
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error Adding Part");
         alert.setHeaderText("Error");
-        alert.setContentText("Please Check Fields and only have numbers in the Phone Number and Zip Code fields");
+        alert.setContentText("Please Check Fields all fields have values");
         alert.showAndWait();
         }
     }
