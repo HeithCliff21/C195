@@ -8,6 +8,7 @@ package Model;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -187,6 +188,12 @@ public class Customer{
         }        
         if (clientZip.equals("")) {
             errorMessage = errorMessage + ("Zip Code cannot be empty\n");
+        }
+        if (clientPhone.contains("[a-zA-Z]+") == false){
+            errorMessage = errorMessage + ("Phone Number can't have non number characters\n");
+        }
+        if (clientZip.contains("[a-zA-Z]+") == false){
+            errorMessage = errorMessage + ("Zip Code can't have non number characters\n");
         }
         return errorMessage;
     }  

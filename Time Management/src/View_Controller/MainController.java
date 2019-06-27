@@ -366,6 +366,7 @@ public class MainController implements Initializable {
             Appointment.deleteapt(appointment.getAppointmentId());  
             updateAppointmentTable();
             System.out.println("Appointment for client " + customerName(appointment.getCustomerId()) + " was removed.");
+            
         } else {
             System.out.println("Appointment for client " + customerName(appointment.getCustomerId()) + " was not removed.");
         } 
@@ -390,11 +391,18 @@ public class MainController implements Initializable {
 
     //Displays/sets Customers table
     public void updateCustomerTable(){
+        Address.getAllAddress();        
+        City.getAllCities();
+        Country.getAllCountries();
+        Customer.getAllCustomers();
         MainCustomersTable.setItems(CustomerTable.getCustomersTable());
     }
 
     //Displays/sets appointment for User All, Month, and Week. 
     public void updateAppointmentTable() throws ParseException {
+        Appointment.getAllAppointments();
+        Appointment.getMonthAppointments();
+        Appointment.getWeekAppointments();
         AllAptTable.setItems(Appointment.getAllAppointments());  
         MonthAptTable.setItems(Appointment.getMonthAppointments());
         WeekAptTable.setItems(Appointment.getWeekAppointments());
@@ -430,10 +438,6 @@ public class MainController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Address.getAllAddress();        
-        City.getAllCities();
-        Country.getAllCountries();
-        Customer.getAllCustomers();
         updateCustomerTable();
         try {
             updateAppointmentTable();
