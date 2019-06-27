@@ -113,15 +113,15 @@ public class UpdateAptController implements Initializable {
     
     public int LocationSet(){  
         String location = appointmentToLocation();
-        if(location != "America/Phoenix") {
-            int cityId = 1;
-            return cityId;
-        } else if (location != "America/New_York") {
-            int cityId = 2;
-            return cityId;
+        if(location.equals("America/Phoenix")) {
+            int locationId = 0;
+            return locationId;
+        } else if (location.equals("America/New_York")) {
+            int locationId = 1;
+            return locationId;
         }else{
-            int cityId = 3;
-            return cityId;
+            int locationId = 2;
+            return locationId;
         }
      }
     
@@ -152,8 +152,9 @@ public class UpdateAptController implements Initializable {
         return time24;
     }
         
-    public String setAptEnd() throws ParseException{
+    public String setAptEnd() throws ParseException{    
         String End = (String) updateaptEndTime.getSelectionModel().getSelectedItem();
+        
         SimpleDateFormat date12Format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date24Format = new SimpleDateFormat("HH:mm:ss");
         

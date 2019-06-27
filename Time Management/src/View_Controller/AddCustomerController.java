@@ -114,7 +114,7 @@ public class AddCustomerController implements Initializable{
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Error Adding Part");
         alert.setHeaderText("Error");
-        alert.setContentText("Please Check Fields and Make sure to Only have Numbers in Phone Number and Zip Code");
+        alert.setContentText("Please Check Fields and only have numbers in the Phone Number and Zip Code fields");
         alert.showAndWait();
         }
     }
